@@ -7,8 +7,7 @@ var GamePlayScene = function(game, stage)
   var drawer;
   var ticker;
   var keyer;
-
-  var text = "I love big bananas they are very ripe and tasty yumm yumm.";
+  var tgen;
 
   var Monologue = function(str)
   {
@@ -56,8 +55,9 @@ var GamePlayScene = function(game, stage)
     ticker = new Ticker({});
     drawer = new Drawer({source:stage.drawCanv});
     keyer = new Keyer({source:stage.dispCanv.canvas});
+    tgen = new TextGen();
 
-    mono = new Monologue(text);
+    mono = new Monologue(tgen.getMonologue());
     mono_disp = new MonologueDisplay(mono);
 
     keyer.register(mono);
