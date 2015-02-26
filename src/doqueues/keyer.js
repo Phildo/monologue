@@ -38,6 +38,7 @@ var Keyer = function(init)
         evtQueue.push(k);
       }
     }
+    evt.preventDefault();
   }
   self.flush = function()
   {

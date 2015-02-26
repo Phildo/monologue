@@ -18,8 +18,6 @@ var GamePlayScene = function(game, stage)
 
     self.key = function(k)
     {
-      console.log("testing: '"+k+"' = '"+self.text.substring(self.progress,1).toLowerCase()+"'");
-      console.log(self.progress);
       if(k == self.text.substring(self.progress,self.progress+1).toLowerCase())
         self.progress++;
     }
@@ -29,17 +27,22 @@ var GamePlayScene = function(game, stage)
   {
     var self = this;
 
+    self.x = 50;
+    self.y = 50;
+
     self.monologue = mono;
     self.draw = function(canv)
     {
       canv.context.font="30px Courrier";
+      canv.context.fillStyle="#999999";
+      canv.context.fillText(self.monologue.text,self.x,self.y);
       canv.context.fillStyle="#FF0000";
       if(self.monologue.text.substring(self.monologue.progress,self.monologue.progress+1) == " ")
-        canv.context.fillText(self.monologue.text.substring(0,self.monologue.progress)+"_",100,100);
+        canv.context.fillText(self.monologue.text.substring(0,self.monologue.progress)+"_",self.x,self.y);
       else
-        canv.context.fillText(self.monologue.text.substring(0,self.monologue.progress+1),100,100);
+        canv.context.fillText(self.monologue.text.substring(0,self.monologue.progress+1),self.x,self.y);
       canv.context.fillStyle="#000000";
-      canv.context.fillText(self.monologue.text.substring(0,self.monologue.progress),100,100);
+      canv.context.fillText(self.monologue.text.substring(0,self.monologue.progress),self.x,self.y);
     }
   }
 
