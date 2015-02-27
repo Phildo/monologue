@@ -474,15 +474,31 @@ var GamePlayScene = function(game, stage)
       drawer.unregister(self.hero);
     }
 
+    self.mode = 0;
+    self.mode1tweenhack = 0;
+    // 0 = play
+    // 1 = escape
     self.tick = function()
     {
-      if(self.timer.t == self.timer.total)
+      if(self.mode == 0)
       {
-        keyer.unregister(self.mono);
-        ticker.unregister(self.mono);
-        ticker.unregister(self.bubb);
-        drawer.unregister(self.bubb);
-        ticker.unregister(self.timer);
+        if(self.timer.t == self.timer.total)
+        {
+          keyer.unregister(self.mono);
+          ticker.unregister(self.mono);
+          ticker.unregister(self.bubb);
+          drawer.unregister(self.bubb);
+          ticker.unregister(self.timer);
+          self.mode = 1;
+        }
+      }
+      else if(self.mode == 1)
+      {
+        if(self.mode1tweenhack < 200)
+        {
+          self.mode1tweenhack++;
+          self.hero.x -= 2;
+        }
       }
     }
   }
