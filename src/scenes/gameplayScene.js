@@ -229,8 +229,6 @@ var GamePlayScene = function(game, stage)
     }
   }
 
-
-
   var Timer = function(scen)
   {
     var self = this;
@@ -485,6 +483,34 @@ var GamePlayScene = function(game, stage)
     }
   }
 
+  var Train = function(scen, mono)
+  {
+    var self = this;
+
+    self.scenario = scen;
+    self.monologue = mono;
+
+    self.start_x = 120;
+    self.start_y = 300;
+    self.start_w = 200;
+    self.start_h = 80;
+
+    self.end_x = 420;
+    self.end_y = 600;
+    self.end_w = 200;
+    self.end_h = 80;
+
+    self.draw = function(canv)
+    {
+    /*
+      self.scenario.shaker.randomize();
+      canv.context.fillStyle = "#FFFFFF";
+      canv.context.fillRect(self.start_x,self.start_y,self.start_w,self.start_h);
+      canv.context.fillRect(self.end_x,self.end_y,self.end_w,self.end_h);
+      */
+    }
+  }
+
   var Scenario1 = function()
   {
     var self = this;
@@ -496,6 +522,7 @@ var GamePlayScene = function(game, stage)
     self.shaker = new Shaker(self);
     self.villain = new Villain(self);
     self.hero = new Hero(self);
+    self.train = new Train(self,self.mono);
 
     self.begin = function()
     {
@@ -509,6 +536,7 @@ var GamePlayScene = function(game, stage)
       drawer.register(self.villain);
       ticker.register(self.villain);
       drawer.register(self.hero);
+      drawer.register(self.train);
     }
 
     self.end = function()
@@ -523,6 +551,7 @@ var GamePlayScene = function(game, stage)
       drawer.unregister(self.villain);
       ticker.unregister(self.villain);
       drawer.unregister(self.hero);
+      drawer.unregister(self.train);
     }
 
     self.mode = 0;
