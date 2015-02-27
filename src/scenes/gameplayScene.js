@@ -75,9 +75,13 @@ var GamePlayScene = function(game, stage)
       {
         self.scenario.bubb.bumpit();
       }
+      else if(self.progress == self.text.length)
+      {
+        //i don't know...
+      }
       else if(k == self.text.substring(self.progress,self.progress+1).toLowerCase())
       {
-        self.scenario.timer.start();
+        if(self.scenario.timer) self.scenario.timer.start();
         self.scenario.bubb.bumpit();
         mermer_audio[Math.floor(Math.random()*mermer_audio.length)].play();
         self.scenario.villain.talk();
@@ -225,6 +229,8 @@ var GamePlayScene = function(game, stage)
     }
   }
 
+
+
   var Timer = function(scen)
   {
     var self = this;
@@ -328,6 +334,44 @@ var GamePlayScene = function(game, stage)
       canv.context.fillRect(self.x+self.scenario.shaker.x, self.y+self.scenario.shaker.y-self.bump, self.w, self.h);
       self.mono_disp.draw(canv, self.bump);
       self.timer_disp.draw(canv, self.bump);
+      self.scenario.shaker.randomize();
+      canv.context.strokeStyle = "#000000";
+      canv.context.lineWidth = 5;
+      canv.context.strokeRect(self.x+self.scenario.shaker.x, self.y+self.scenario.shaker.y-self.bump, self.w, self.h);
+    }
+  }
+
+  var TimelessBubbleDisplay = function(scen, mono)
+  {
+    var self = this;
+
+    self.x = 200;
+    self.y = 200;
+    self.w = 520;
+    self.h = 115;
+    self.bump = 0;
+
+    self.scenario = scen;
+    self.monologue = mono;
+    self.mono_disp = new MonologueBubbleDisplay(self.scenario,self.monologue, self.x+10, self.y+10, self.w-BigFontPx, self.h);
+
+    self.bumpit = function()
+    {
+      self.bump = 5;
+    }
+
+    self.tick = function()
+    {
+      if(self.bump > 0) self.bump--;
+    }
+
+    self.draw = function(canv)
+    {
+      self.scenario.shaker.randomize();
+      if(self.monologue.disabled) canv.context.fillStyle = "#BBBBBB";
+      else                        canv.context.fillStyle = "#FFFFFF";
+      canv.context.fillRect(self.x+self.scenario.shaker.x, self.y+self.scenario.shaker.y-self.bump, self.w, self.h);
+      self.mono_disp.draw(canv, self.bump);
       self.scenario.shaker.randomize();
       canv.context.strokeStyle = "#000000";
       canv.context.lineWidth = 5;
@@ -520,11 +564,9 @@ var GamePlayScene = function(game, stage)
 
     self.mono = new Monologue(self,tgen.getMonologue());
     self.mono_full_disp = new MonologueFullDisplay(self,self.mono);
-    self.timer = new Timer(self);
-    self.bubb = new BubbleDisplay(self,self.mono,self.timer);
+    self.bubb = new TimelessBubbleDisplay(self,self.mono);
     self.shaker = new Shaker(self);
     self.villain = new Villain(self);
-    self.hero = new Hero(self);
 
     self.begin = function()
     {
@@ -533,11 +575,9 @@ var GamePlayScene = function(game, stage)
       drawer.register(self.mono_full_disp);
       drawer.register(self.bubb);
       ticker.register(self.bubb);
-      ticker.register(self.timer);
       ticker.register(self.shaker);
       drawer.register(self.villain);
       ticker.register(self.villain);
-      drawer.register(self.hero);
     }
 
     self.end = function()
@@ -547,43 +587,24 @@ var GamePlayScene = function(game, stage)
       drawer.unregister(self.mono_full_disp);
       drawer.unregister(self.bubb);
       ticker.unregister(self.bubb);
-      ticker.unregister(self.timer);
       ticker.unregister(self.shaker);
       drawer.unregister(self.villain);
       ticker.unregister(self.villain);
-      drawer.unregister(self.hero);
     }
 
-    self.mode = 0;
-    self.mode1tweenhack = 0;
-    // 0 = play
-    // 1 = escape
     self.tick = function()
     {
-      if(self.mode == 0)
+    /*
+      if(self.timer.t == self.timer.total)
       {
-        if(self.timer.t == self.timer.total)
-        {
-          keyer.unregister(self.mono);
-          ticker.unregister(self.mono);
-          ticker.unregister(self.bubb);
-          drawer.unregister(self.bubb);
-          ticker.unregister(self.timer);
-          self.mode = 1;
-        }
+        keyer.unregister(self.mono);
+        ticker.unregister(self.mono);
+        ticker.unregister(self.bubb);
+        drawer.unregister(self.bubb);
+        ticker.unregister(self.timer);
+        scene.goToScenario(1);
       }
-      else if(self.mode == 1)
-      {
-        if(self.mode1tweenhack < 220)
-        {
-          self.mode1tweenhack++;
-          self.hero.x -= 2;
-        }
-        else
-        {
-          scene.goToScenario(1);
-        }
-      }
+    */
     }
   }
 
