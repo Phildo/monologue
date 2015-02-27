@@ -2,8 +2,10 @@ var GamePlayScene = function(game, stage)
 {
   var self = this;
 
-  var BigFont = "30px Courrier";
-  var SmallFont = "30px Courrier";
+  var BigFontPx = 20;
+  var BigFont = BigFontPx+"px Courrier";
+  var SmallFontPx = 30;
+  var SmallFont = SmallFontPx+"px Courrier";
 
   var assetter;
   var dbugger; //'debugger' is a keyword... (why.)
@@ -54,7 +56,7 @@ var GamePlayScene = function(game, stage)
       return counts;
     }
 
-    self.fullWidthLines = self.splitTextIntoLines(self.text,BigFont,500);
+    self.fullWidthLines = self.splitTextIntoLines(self.text,BigFont,stage.drawCanv.canvas.width);
     self.fullWidthLineCounts = self.getCountsForLines(self.fullWidthLines);
 
     self.key = function(k)
@@ -68,8 +70,8 @@ var GamePlayScene = function(game, stage)
   {
     var self = this;
 
-    self.x = 50;
-    self.y = 50;
+    self.x = 0;
+    self.y = 0+BigFontPx;
 
     self.monologue = mono;
     self.draw = function(canv)
@@ -79,23 +81,23 @@ var GamePlayScene = function(game, stage)
       //Gray background
       canv.context.fillStyle="#999999";
       for(var i = 0; i < self.monologue.fullWidthLines.length; i++)
-        canv.context.fillText(self.monologue.fullWidthLines[i],self.x,self.y+(30*i));
+        canv.context.fillText(self.monologue.fullWidthLines[i],self.x,self.y+(BigFontPx*i));
 
       //Red prompt
       canv.context.fillStyle="#FF0000";
       for(var i = 0; i < self.monologue.fullWidthLines.length; i++)
       {
         if(self.monologue.progress >= self.monologue.fullWidthLineCounts[i])
-          canv.context.fillText(self.monologue.fullWidthLines[i],self.x,self.y+(30*i));
+          canv.context.fillText(self.monologue.fullWidthLines[i],self.x,self.y+(BigFontPx*i));
         else
         {
           var p;
           if(i == 0) p = self.monologue.progress;
           else       p = self.monologue.progress-self.monologue.fullWidthLineCounts[i-1];
           if(self.monologue.fullWidthLines[i].substring(p,p+1) == " ")
-            canv.context.fillText(self.monologue.fullWidthLines[i].substring(0,p)+"_",self.x,self.y+(30*i));
+            canv.context.fillText(self.monologue.fullWidthLines[i].substring(0,p)+"_",self.x,self.y+(BigFontPx*i));
           else
-            canv.context.fillText(self.monologue.fullWidthLines[i].substring(0,p+1),self.x,self.y+(30*i));
+            canv.context.fillText(self.monologue.fullWidthLines[i].substring(0,p+1),self.x,self.y+(BigFontPx*i));
         }
       }
 
@@ -104,13 +106,13 @@ var GamePlayScene = function(game, stage)
       for(var i = 0; i < self.monologue.fullWidthLines.length; i++)
       {
         if(self.monologue.progress >= self.monologue.fullWidthLineCounts[i])
-          canv.context.fillText(self.monologue.fullWidthLines[i],self.x,self.y+(30*i));
+          canv.context.fillText(self.monologue.fullWidthLines[i],self.x,self.y+(BigFontPx*i));
         else
         {
             var p;
             if(i == 0) p = self.monologue.progress;
             else p = self.monologue.progress-self.monologue.fullWidthLineCounts[i-1];
-            canv.context.fillText(self.monologue.fullWidthLines[i].substring(0,p),self.x,self.y+(30*i));
+            canv.context.fillText(self.monologue.fullWidthLines[i].substring(0,p),self.x,self.y+(BigFontPx*i));
         }
       }
     }
