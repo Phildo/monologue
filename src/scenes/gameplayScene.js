@@ -23,6 +23,7 @@ var GamePlayScene = function(game, stage)
 
     self.splitTextIntoLines = function(font, width)
     {
+      console.log(width);
       var lines = [];
       var found = 0;
       var searched = 0;
@@ -34,7 +35,8 @@ var GamePlayScene = function(game, stage)
         searched = self.text.indexOf(" ",found);
         tentative_search = self.text.indexOf(" ",searched+1);
         if(tentative_search == -1) tentative_search = self.text.length;
-        while(stage.drawCanv.context.measureText(self.text.substring(found,tentative_search)).width < width && searched != tentative_search)
+        searched = tentative_search; //guarantee at least one word
+        while(stage.drawCanv.context.measureText(self.text.substring(found,tentative_search)).width < width && searched != self.text.length)
         {
           searched = tentative_search;
           tentative_search = self.text.indexOf(" ",searched+1);
@@ -70,72 +72,15 @@ var GamePlayScene = function(game, stage)
     var self = this;
 
     self.x = 0;
-    self.y = 0+BigFontPx;
+    self.y = 0+SmallFontPx;
 
     self.monologue = mono;
-    self.lines = self.monologue.splitTextIntoLines(BigFont,stage.drawCanv.canvas.width);
-    self.lineCounts = self.monologue.getCountsForLines(self.lines);
-
-    self.draw = function(canv)
-    {
-      canv.context.font=BigFont;
-
-      //Red prompt
-      canv.context.fillStyle="#FF0000";
-      for(var i = 0; i < self.lines.length; i++)
-      {
-        if(self.monologue.progress >= self.lineCounts[i])
-          canv.context.fillText(self.lines[i],self.x+shaker.x,self.y+(BigFontPx*i)+shaker.y);
-        else
-        {
-          var p;
-          if(i == 0) p = self.monologue.progress;
-          else       p = self.monologue.progress-self.lineCounts[i-1];
-          if(self.lines[i].substring(p,p+1) == " ")
-            canv.context.fillText(self.lines[i].substring(0,p)+"_",self.x+shaker.x,self.y+(BigFontPx*i)+shaker.y);
-          else
-            canv.context.fillText(self.lines[i].substring(0,p+1),self.x+shaker.x,self.y+(BigFontPx*i)+shaker.y);
-        }
-      }
-
-      //Black completed
-      canv.context.fillStyle="#000000";
-      for(var i = 0; i < self.lines.length; i++)
-      {
-        if(self.monologue.progress >= self.lineCounts[i])
-          canv.context.fillText(self.lines[i],self.x+shaker.x,self.y+(BigFontPx*i)+shaker.y);
-        else
-        {
-            var p;
-            if(i == 0) p = self.monologue.progress;
-            else p = self.monologue.progress-self.lineCounts[i-1];
-            canv.context.fillText(self.lines[i].substring(0,p),self.x+shaker.x,self.y+(BigFontPx*i)+shaker.y);
-        }
-      }
-    }
-  }
-
-  var MonologueBubbleDisplay = function(mono)
-  {
-    var self = this;
-
-    self.x = 100;
-    self.y = 200+SmallFontPx;
-    self.w = 100;
-    self.h = 100;
-
-    self.monologue = mono;
-    self.lines = self.monologue.splitTextIntoLines(SmallFont,self.w);
+    self.lines = self.monologue.splitTextIntoLines(SmallFont,stage.drawCanv.canvas.width);
     self.lineCounts = self.monologue.getCountsForLines(self.lines);
 
     self.draw = function(canv)
     {
       canv.context.font=SmallFont;
-
-      //Gray background
-      canv.context.fillStyle="#999999";
-      for(var i = 0; i < self.lines.length; i++)
-        canv.context.fillText(self.lines[i],self.x+shaker.x,self.y+(SmallFontPx*i)+shaker.y);
 
       //Red prompt
       canv.context.fillStyle="#FF0000";
@@ -167,6 +112,70 @@ var GamePlayScene = function(game, stage)
             if(i == 0) p = self.monologue.progress;
             else p = self.monologue.progress-self.lineCounts[i-1];
             canv.context.fillText(self.lines[i].substring(0,p),self.x+shaker.x,self.y+(SmallFontPx*i)+shaker.y);
+        }
+      }
+    }
+  }
+
+  var MonologueBubbleDisplay = function(mono)
+  {
+    var self = this;
+
+    self.x = 100;
+    self.y = 200+BigFontPx;
+    self.w = 300;
+    self.h = 100;
+
+    self.monologue = mono;
+    self.lines = self.monologue.splitTextIntoLines(BigFont,self.w);
+    self.lineCounts = self.monologue.getCountsForLines(self.lines);
+
+    self.draw = function(canv)
+    {
+      canv.context.font=BigFont;
+
+      var lineOn = 0;
+      for(var i = 0; i < self.lines.length; i++)
+      {
+        if(i != 0 && self.monologue.progress > self.lineCounts[i-1])
+          lineOn = i;
+      }
+
+      //Gray background
+      canv.context.fillStyle="#999999";
+      for(var i = lineOn; i < lineOn+2 && i <self.lines.length; i++)
+        canv.context.fillText(self.lines[i],self.x+shaker.x,self.y+(BigFontPx*(i-lineOn))+shaker.y);
+
+      //Red prompt
+      canv.context.fillStyle="#FF0000";
+      for(var i = lineOn; i < lineOn+2 && i <self.lines.length; i++)
+      {
+        if(self.monologue.progress >= self.lineCounts[i])
+          canv.context.fillText(self.lines[i],self.x+shaker.x,self.y+(BigFontPx*(i-lineOn))+shaker.y);
+        else
+        {
+          var p;
+          if(i == 0) p = self.monologue.progress;
+          else       p = self.monologue.progress-self.lineCounts[i-1];
+          if(self.lines[i].substring(p,p+1) == " ")
+            canv.context.fillText(self.lines[i].substring(0,p)+"_",self.x+shaker.x,self.y+(BigFontPx*(i-lineOn))+shaker.y);
+          else
+            canv.context.fillText(self.lines[i].substring(0,p+1),self.x+shaker.x,self.y+(BigFontPx*(i-lineOn))+shaker.y);
+        }
+      }
+
+      //Black completed
+      canv.context.fillStyle="#000000";
+      for(var i = lineOn; i < lineOn+2 && i <self.lines.length; i++)
+      {
+        if(self.monologue.progress >= self.lineCounts[i])
+          canv.context.fillText(self.lines[i],self.x+shaker.x,self.y+(BigFontPx*(i-lineOn))+shaker.y);
+        else
+        {
+            var p;
+            if(i == 0) p = self.monologue.progress;
+            else p = self.monologue.progress-self.lineCounts[i-1];
+            canv.context.fillText(self.lines[i].substring(0,p),self.x+shaker.x,self.y+(BigFontPx*(i-lineOn))+shaker.y);
         }
       }
     }
