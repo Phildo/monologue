@@ -89,7 +89,7 @@ var GamePlayScene = function(game, stage)
       }
       else
       {
-        cough_audio.play();
+        cough_audio[Math.floor(Math.random()*cough_audio.length)].play();
         self.scenario.shaker.shake = 10;
         self.disabled = 50;
         self.revokeProgress();
@@ -825,8 +825,12 @@ var GamePlayScene = function(game, stage)
       mermer_audio.push(new Aud("assets/Talking"+(i+1)+".ogg", false));
       mermer_audio[i].load();
     }
-    cough_audio = new Aud("assets/cough.ogg", false);
-    cough_audio.load();
+    cough_audio = [];
+    for(var i = 0; i < 4; i++)
+    {
+      cough_audio.push(new Aud("assets/Coughing"+(i+1)+".ogg", false));
+      cough_audio[i].load();
+    }
 
     scenarios = [];
     var main = new Scenario1();
