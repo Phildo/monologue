@@ -1,10 +1,10 @@
-var Aud = function(source)
+var Aud = function(source, loop)
 {
   var self = this;
 
   self.audio = new Audio(source);
   self.audio.controls = false;
-  self.audio.loop = true;
+  self.audio.loop = loop;
 
   self.load = function()
   {

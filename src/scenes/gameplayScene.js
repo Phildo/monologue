@@ -13,7 +13,8 @@ var GamePlayScene = function(game, stage)
   var ticker;
   var keyer;
   var tgen;
-  var audio;
+  var bg_audio;
+  var mermer_audio;
 
   var Monologue = function(str)
   {
@@ -61,7 +62,10 @@ var GamePlayScene = function(game, stage)
     self.key = function(k)
     {
       if(k == self.text.substring(self.progress,self.progress+1).toLowerCase())
+      {
+        mermer_audio.play();
         self.progress++;
+      }
       else shaker.shake = 10;
     }
   }
@@ -246,9 +250,11 @@ var GamePlayScene = function(game, stage)
     drawer = new Drawer({source:stage.drawCanv});
     keyer = new Keyer({source:stage.dispCanv.canvas});
     tgen = new TextGen();
-    audio = new Aud("assets/AllTiedUp.ogg");
-    audio.load();
-    //audio.play();
+    bg_audio = new Aud("assets/AllTiedUp.ogg", true);
+    bg_audio.load();
+    //bg_audio.play();
+    mermer_audio = new Aud("assets/merrmerr.m4a", false);
+    mermer_audio.load();
 
     mono = new Monologue(tgen.getMonologue());
     mono_full_disp = new MonologueFullDisplay(mono);
