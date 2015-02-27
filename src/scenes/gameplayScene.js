@@ -272,6 +272,7 @@ var GamePlayScene = function(game, stage)
 
   self.draw = function()
   {
+    stage.drawCanv.context.drawImage(assetter.asset("bg.png"),0+shaker.x,0+shaker.y);
     drawer.flush();
   };
 
