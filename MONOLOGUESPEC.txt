@@ -1,0 +1,58 @@
+MONOLOGUE v.1:
+
+
+Premise:
+You are some sort of villian trying to give a monologue to your trapped hero
+before they escape.
+
+Story:
+You are an old timey bandit from the 1860's that has tied a sheriff to train tracks.
+
+Gameplay:
+The player will have to type the correct words/phrases before the hero escapes.
+
+Graphics:
+	Background
+
+Sound:
+	Background
+
+If a player incorrectly types a word or phrase:
+	Timer Deduction?
+	Restart Word?
+	Restart Monologue?
+	Hero Laughs/Antagonizes Villian
+	Villian coughs or stumbles
+		Time Delay
+		Go back to start of sentence
+		Go back to a few words before
+
+If a player correctly types a word or phrase within the time limit:
+	Success!
+	Show hero death?
+	Slow fade out with a laugh?
+	Hero Whimpers/Cries
+	
+Feature Creep:
+	Procedural Phrase Generation
+	Making Phrases
+	High Score List
+	Menu
+	Level Select
+	Juice
+		Animations for players (bounce up and down, etc)
+		Combo system (just show combo of words)
+		Point System?
+		Error/Correct Sounds?
+			Possibly enhance/dehance track
+		Level/Context heavy fonts
+	More situations
+		James Bond/Austin Powers (Lowering to Laser Shark)
+		Viking - person at stake "we can plunder!"
+		Pirate - person at the plank
+		Vampire/Monster - Vampire about to be staked?
+	Multiplayer (Hero and Villian)
+		Tug-o-war Method:
+			Hero and Villian do some similar action to battle eachother
+		Villian on Keyboard, Hero on Mouse
+			Hero Possibly Clicking as fast as they can...
