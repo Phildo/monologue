@@ -394,6 +394,8 @@ var GamePlayScene = function(game, stage)
       self.s.randomize();
       self.s.shake = self.s.x;
       self.s.randomize();
+      self.s.shake = self.s.x;
+      self.s.randomize();
 
       self.s.randomize();
       shaker.randomize();
