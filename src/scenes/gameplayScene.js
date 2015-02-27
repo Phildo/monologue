@@ -235,7 +235,7 @@ var GamePlayScene = function(game, stage)
 
     self.scenario = scen;
     self.t = 0;
-    self.total = 1000;
+    self.total = 2000;
 
     self.started = false;
 
@@ -531,7 +531,11 @@ var GamePlayScene = function(game, stage)
       x -= ((w*sin)-w)/2;
       w *= sin;
 
-      canv.context.fillRect(x,y,w,h);
+      if(Math.round(self.sin_seed/10)%2)
+        canv.context.drawImage(assetter.asset("Train1.png"),x+self.scenario.shaker.x,y+self.scenario.shaker.y,w,h);
+      else
+        canv.context.drawImage(assetter.asset("Train2.png"),x+self.scenario.shaker.x,y+self.scenario.shaker.y,w,h);
+      //canv.context.fillRect(x,y,w,h);
     }
     self.tick = function()
     {
@@ -598,6 +602,8 @@ var GamePlayScene = function(game, stage)
       ticker.register(self.villain);
       drawer.register(self.hero);
       drawer.register(self.fade);
+
+      bg_audio.play();
     }
 
     self.end = function()
@@ -615,6 +621,8 @@ var GamePlayScene = function(game, stage)
       ticker.unregister(self.villain);
       drawer.unregister(self.hero);
       drawer.unregister(self.fade);
+
+      bg_audio.stop();
     }
 
     // 0 = play
@@ -699,6 +707,8 @@ var GamePlayScene = function(game, stage)
       drawer.register(self.villain);
       ticker.register(self.villain);
       drawer.register(self.fade);
+
+      bg_audio.play();
     }
 
     self.end = function()
@@ -712,6 +722,8 @@ var GamePlayScene = function(game, stage)
       drawer.unregister(self.villain);
       ticker.unregister(self.villain);
       drawer.unregister(self.fade);
+
+      bg_audio.stop();
     }
 
     //0 = lamenting
@@ -775,6 +787,8 @@ var GamePlayScene = function(game, stage)
       drawer.register(self.villain);
       ticker.register(self.villain);
       drawer.register(self.fade);
+
+      bg_audio.play();
     }
 
     self.end = function()
@@ -788,6 +802,8 @@ var GamePlayScene = function(game, stage)
       drawer.unregister(self.villain);
       ticker.unregister(self.villain);
       drawer.unregister(self.fade);
+
+      bg_audio.stop();
     }
 
     //0 = lamenting
@@ -844,7 +860,6 @@ var GamePlayScene = function(game, stage)
     tgen = new TextGen();
     bg_audio = new Aud("assets/AllTiedUp.ogg", true);
     bg_audio.load();
-    bg_audio.play();
     mermer_audio = [];
     for(var i = 0; i < 10; i++)
     {
