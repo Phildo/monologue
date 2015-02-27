@@ -15,6 +15,7 @@ var GamePlayScene = function(game, stage)
   var tgen;
   var bg_audio;
   var mermer_audio;
+  var cough_audio;
 
   var Monologue = function(str)
   {
@@ -59,17 +60,26 @@ var GamePlayScene = function(game, stage)
       }
       return counts;
     }
+    self.revokeProgress = function()
+    {
+      self.progress = self.text.substring(0,self.progress).lastIndexOf(" ")+1;
+    }
 
     self.key = function(k)
     {
       if(k == self.text.substring(self.progress,self.progress+1).toLowerCase())
       {
         bubb.bumpit();
-        mermer_audio[Math.floor(Math.random()*mermer_audio.length)].play("");
+        mermer_audio[Math.floor(Math.random()*mermer_audio.length)].play();
         villain.talk();
         self.progress++;
       }
-      else shaker.shake = 10;
+      else
+      {
+        cough_audio.play();
+        shaker.shake = 10;
+        self.revokeProgress();
+      }
     }
   }
 
@@ -388,7 +398,6 @@ var GamePlayScene = function(game, stage)
     }
   }
 
-
   var mono;
   var mono_full_disp;
   var bubb;
@@ -414,6 +423,8 @@ var GamePlayScene = function(game, stage)
       mermer_audio.push(new Aud("assets/Talking"+(i+1)+".ogg", false));
       mermer_audio[i].load();
     }
+    cough_audio = new Aud("assets/cough.ogg", false);
+    cough_audio.load();
 
     mono = new Monologue(tgen.getMonologue());
     mono_full_disp = new MonologueFullDisplay(mono);
