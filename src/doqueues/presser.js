@@ -14,7 +14,7 @@ var Presser = function(init)
   var evtQueue = [];
   var down = false;
   self.register = function(pressable) { pressables.push(pressable); }
-  self.unregister = function(pressable) { pressables.splice(pressables.indexOf(pressable),1); }
+  self.unregister = function(pressable) { var i = pressables.indexOf(pressable); if(i != -1) pressables.splice(i,1); }
   self.clear = function() { pressables = []; }
   self.attach = function() //will auto-call on creation
   {

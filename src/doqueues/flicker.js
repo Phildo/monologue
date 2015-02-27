@@ -13,7 +13,7 @@ var Flicker = function(init)
   var callbackQueue = [];
   var evtQueue = [];
   self.register = function(flickable) { flickables.push(flickable); }
-  self.unregister = function(flickable) { flickables.splice(flickables.indexOf(flickable),1); }
+  self.unregister = function(flickable) { var i = flickables.indexOf(flickable); if(i != -1) flickables.splice(i,1); }
   self.clear = function() { flickables = []; }
   self.attach = function() //will get auto-called on creation
   {

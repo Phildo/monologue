@@ -1,6 +1,7 @@
 var GamePlayScene = function(game, stage)
 {
   var self = this;
+  var scene = self;
 
   var BigFontPx = 30;
   var BigFont = BigFontPx+"px vg_font";
@@ -234,7 +235,6 @@ var GamePlayScene = function(game, stage)
     self.tick = function()
     {
       if(self.t < self.total) self.t++;
-      else self.t = 0;
     }
   }
 
@@ -473,6 +473,11 @@ var GamePlayScene = function(game, stage)
       ticker.unregister(self.villain);
       drawer.unregister(self.hero);
     }
+
+    self.tick = function()
+    {
+
+    }
   }
 
   var scenarios;
@@ -525,6 +530,13 @@ var GamePlayScene = function(game, stage)
     stage.drawCanv.context.drawImage(assetter.asset("bg.png"),0+scenarios[cur_scen].shaker.x,0+scenarios[cur_scen].shaker.y);
     drawer.flush();
   };
+
+  self.goToScenario = function(s)
+  {
+    scenarios[cur_scen].end();
+    cur_scen = s;
+    scenarios[cur_scen].begin();
+  }
 
   self.cleanup = function()
   {

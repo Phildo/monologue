@@ -12,7 +12,7 @@ var Clicker = function(init)
   var callbackQueue = [];
   var evtQueue = [];
   self.register = function(clickable) { clickables.push(clickable); }
-  self.unregister = function(clickable) { clickables.splice(clickables.indexOf(clickable),1); }
+  self.unregister = function(clickable) { var i = clickables.indexOf(clickable); if(i != -1) clickables.splice(i,1); }
   self.clear = function() { clickables = []; }
   self.attach = function() //will get auto-called at creation
   {

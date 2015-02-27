@@ -10,7 +10,7 @@ var Drawer = function(init)
 
   var drawables = [];
   self.register = function(drawable) { drawables.push(drawable); }
-  self.unregister = function(drawable) { drawables.splice(drawables.indexOf(drawable),1); }
+  self.unregister = function(drawable) { var i = drawables.indexOf(drawable); if(i != -1) drawables.splice(i,1); }
   self.clear = function() { drawables = []; }
   self.attach = function() {} //will get auto-called on create
   self.detach = function() {}

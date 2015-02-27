@@ -13,7 +13,7 @@ var Dragger = function(init)
   var callbackQueue = [];
   var evtQueue = [];
   self.register = function(draggable) { draggables.push(draggable); }
-  self.unregister = function(draggable) { draggables.splice(draggables.indexOf(draggable),1); }
+  self.unregister = function(draggable) { var i = draggables.indexOf(draggable); if(i != -1) draggables.splice(i,1); }
   self.clear = function() { draggables = []; }
   self.attach = function() //will get auto-called on create
   {

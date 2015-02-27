@@ -18,9 +18,9 @@ var Hoverer = function(init)
   self.register = function(hoverable) { hoverables.push(hoverable); nothovering.push(hoverable); }
   self.unregister = function(hoverable) 
   {
-    hoverables.splice(hoverables.indexOf(hoverable),1);
-    if(   hovering.indexOv(hoverable))    hovering.splice(   hovering.indexOf(hoverable),1);
-    if(nothovering.indexOv(hoverable)) nothovering.splice(nothovering.indexOf(hoverable),1);
+    var i =  hoverables.indexOf(hoverable); if(i != -1)  hoverables.splice(i,1);
+    var i =    hovering.indexOf(hoverable); if(i != -1)    hovering.splice(i,1);
+    var i = nothovering.indexOf(hoverable); if(i != -1) nothovering.splice(i,1);
   }
   self.clear = function() { hoverables = []; hovering = []; nothovering = []; }
   self.attach = function() //will get auto-called on creation

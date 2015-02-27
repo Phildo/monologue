@@ -12,7 +12,7 @@ var Keyer = function(init)
   var callbackQueue = [];
   var evtQueue = [];
   self.register = function(keyable) { keyables.push(keyable); }
-  self.unregister = function(keyable) { keyables.splice(keyables.indexOf(keyable),1); }
+  self.unregister = function(keyable) { var i = keyables.indexOf(keyable); if(i != -1) keyables.splice(i,1); }
   self.clear = function() { keyables = []; }
   self.attach = function() //will get auto-called at creation
   {

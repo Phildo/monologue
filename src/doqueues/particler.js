@@ -9,7 +9,7 @@ var Particler = function(init)
 
   var particlables = [];
   self.register = function(particlable) { particlables.push(particlable); }
-  self.unregister = function(particlable) { particlables.splice(particlables.indexOf(particlable),1); }
+  self.unregister = function(particlable) { var i = particlables.indexOf(particlable); if(i != -1) particlables.splice(i,1); }
   self.clear = function() { particlables = []; }
   self.attach = function() {} //will get auto-called on creation
   self.detach = function() {}
