@@ -490,24 +490,28 @@ var GamePlayScene = function(game, stage)
     self.scenario = scen;
     self.monologue = mono;
 
-    self.start_x = 120;
-    self.start_y = 300;
-    self.start_w = 200;
-    self.start_h = 80;
+    self.start_x = 340;
+    self.start_y = 380;
+    self.start_w = 50;
+    self.start_h = 50;
 
-    self.end_x = 420;
-    self.end_y = 600;
-    self.end_w = 200;
-    self.end_h = 80;
+    self.end_x = 180;
+    self.end_y = 280;
+    self.end_w = 300;
+    self.end_h = 300;
 
+    var lerp = function(s,e,t)
+    {
+      return s+(e-s)*t;
+    }
     self.draw = function(canv)
     {
-    /*
       self.scenario.shaker.randomize();
       canv.context.fillStyle = "#FFFFFF";
-      canv.context.fillRect(self.start_x,self.start_y,self.start_w,self.start_h);
-      canv.context.fillRect(self.end_x,self.end_y,self.end_w,self.end_h);
-      */
+      canv.context.fillRect(lerp(self.start_x,self.end_x,self.monologue.progress/self.monologue.text.length),
+                            lerp(self.start_y,self.end_y,self.monologue.progress/self.monologue.text.length),
+                            lerp(self.start_w,self.end_w,self.monologue.progress/self.monologue.text.length),
+                            lerp(self.start_h,self.end_h,self.monologue.progress/self.monologue.text.length));
     }
   }
 
