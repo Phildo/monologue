@@ -333,12 +333,57 @@ var GamePlayScene = function(game, stage)
     }
   }
 
+  var Hero = function()
+  {
+    var self = this;
+
+    self.x = 200;
+    self.y = 500;
+    self.w = 200;
+    self.h = 80;
+
+    //personal wiggler
+    self.s = new Shaker();
+
+    self.draw = function(canv)
+    {
+      self.s.shake = 10;
+      self.s.randomize();
+      self.s.shake = self.s.x;
+      self.s.randomize();
+
+      self.s.randomize();
+      shaker.randomize();
+      canv.context.fillStyle = "#FFFFFF";
+      var x = shaker.x;
+      var y = shaker.y;
+      shaker.randomize();
+      shaker.x*=20;
+      shaker.y*=20;
+      canv.context.fillRect(self.x+x-(shaker.x/2)+self.s.x,self.y+y-(shaker.y/2)+self.s.y,self.w+shaker.x,self.h+shaker.y);
+
+      self.s.randomize();
+      shaker.randomize();
+      canv.context.strokeStyle = "#000000";
+      var x = shaker.x;
+      var y = shaker.y;
+      shaker.randomize();
+      shaker.x*=20;
+      shaker.y*=20;
+      canv.context.strokeRect(self.x+x-(shaker.x/2)+self.s.x,self.y+y-(shaker.y/2)+self.s.y,self.w+shaker.x,self.h+shaker.y);
+
+      shaker.randomize();
+    }
+  }
+
+
   var mono;
   var mono_full_disp;
   var bubb;
   var timer;
   var shaker;
   var villain;
+  var hero;
 
   self.ready = function()
   {
@@ -364,6 +409,7 @@ var GamePlayScene = function(game, stage)
     bubb = new BubbleDisplay(mono,timer);
     shaker = new Shaker();
     villain = new Villain();
+    hero = new Hero();
 
     keyer.register(mono);
     drawer.register(mono_full_disp);
@@ -372,6 +418,7 @@ var GamePlayScene = function(game, stage)
     ticker.register(shaker);
     drawer.register(villain);
     ticker.register(villain);
+    drawer.register(hero);
   };
 
   self.tick = function()
@@ -389,6 +436,5 @@ var GamePlayScene = function(game, stage)
   self.cleanup = function()
   {
   };
-
 };
 
