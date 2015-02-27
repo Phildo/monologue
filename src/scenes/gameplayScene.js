@@ -243,16 +243,21 @@ var GamePlayScene = function(game, stage)
     self.w = w;
     self.h = h;
 
+    self.s = new Shaker();
+
     self.draw = function(canv, off)
     {
+      self.s.shake = 10*((self.t.t/self.t.total)/1);
+      self.s.randomize();
+
       //draw red
       shaker.randomize();
       canv.context.strokeStyle = "#FF0000";
       canv.context.lineWidth = 10;
       canv.context.beginPath();
       canv.context.arc(
-      self.x+self.w/2+shaker.x,
-      self.y+self.h/2+shaker.y-off,
+      self.x+self.w/2+shaker.x+self.s.x,
+      self.y+self.h/2+shaker.y+self.s.y-off,
       (self.w/2)-5,
       3*Math.PI/2,
       (3*(Math.PI/2)+(self.t.t/self.t.total)*(2*Math.PI))%(2*Math.PI)+0.01,
