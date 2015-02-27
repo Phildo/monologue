@@ -2,9 +2,9 @@ var GamePlayScene = function(game, stage)
 {
   var self = this;
 
-  var BigFontPx = 20;
+  var BigFontPx = 30;
   var BigFont = BigFontPx+"px vg_font";
-  var SmallFontPx = 12;
+  var SmallFontPx = 20;
   var SmallFont = SmallFontPx+"px vg_font";
 
   var assetter;
@@ -253,14 +253,14 @@ var GamePlayScene = function(game, stage)
   {
     var self = this;
 
-    self.x = 100;
-    self.y = 100;
-    self.w = 400;
-    self.h = 85;
+    self.x = 200;
+    self.y = 200;
+    self.w = 520;
+    self.h = 115;
 
     self.monologue = mono;
     self.timer = timer;
-    self.mono_disp = new MonologueBubbleDisplay(self.monologue, self.x+(self.h), self.y+10, self.w-(self.h)-20, self.h);
+    self.mono_disp = new MonologueBubbleDisplay(self.monologue, self.x+(self.h), self.y+10, self.w-(self.h)-BigFontPx, self.h);
     self.timer_disp = new TimerDisplay(self.timer, self.x+10, self.y+10, self.h-20, self.h-20);
 
     self.draw = function(canv)
@@ -298,10 +298,10 @@ var GamePlayScene = function(game, stage)
   {
     var self = this;
 
-    self.x = 500;
+    self.x = 700;
     self.y = 300;
-    self.w = 50;
-    self.h = 100;
+    self.w = 100;
+    self.h = 300;
 
     self.anim = 0;
 
