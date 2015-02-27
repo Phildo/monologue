@@ -1,4 +1,4 @@
-MONOLOGUE v.1:
+MONOLOGUE v.2:
 
 
 Premise:
@@ -54,5 +54,40 @@ Feature Creep:
 	Multiplayer (Hero and Villian)
 		Tug-o-war Method:
 			Hero and Villian do some similar action to battle eachother
-		Villian on Keyboard, Hero on Mouse
+		Villian on Keyboard, Hero on Mouse/controller (triggers)
 			Hero Possibly Clicking as fast as they can...
+			Timer goes down when Hero clicks triggers on xbox controller.
+
+TODOs:
+
+NEEDS TO BE DONE:
+	Generate Babby Art Assets
+	Setup "start"/menu?
+	Game Logic
+		Win State
+		Lose State
+		Implement Incorrect Punishments
+	Villian Animation
+	Villian Speech Sound
+	Get legit art assets
+	Fix Back Button not fucking up game
+	Phrase: No he got away...
+
+WOULD LIKE:
+	Spellcheck words
+	Generate more words
+	Generate more structures
+	Generate more levels
+		Pirate
+	Background Animation (tumbleweed/cloud)
+	Hero Animation
+	Hero Speech Sounds
+	Win State -> Fade Out Animation
+	Lose State -> Animation
+	Multiplayer
+
+FEATURE CREEP:
+	Credits
+
+NITPICK:
+	Music Loop "fix"
