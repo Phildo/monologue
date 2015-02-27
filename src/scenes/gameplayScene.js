@@ -64,7 +64,7 @@ var GamePlayScene = function(game, stage)
     {
       if(k == self.text.substring(self.progress,self.progress+1).toLowerCase())
       {
-        mermer_audio.play();
+        mermer_audio[Math.floor(Math.random()*mermer_audio.length)].play("");
         villain.talk();
         self.progress++;
       }
@@ -351,8 +351,12 @@ var GamePlayScene = function(game, stage)
     bg_audio = new Aud("assets/AllTiedUp.ogg", true);
     bg_audio.load();
     bg_audio.play();
-    mermer_audio = new Aud("assets/merrmerr.m4a", false);
-    mermer_audio.load();
+    mermer_audio = [];
+    for(var i = 0; i < 10; i++)
+    {
+      mermer_audio.push(new Aud("assets/Talking"+(i+1)+".ogg", false));
+      mermer_audio[i].load();
+    }
 
     mono = new Monologue(tgen.getMonologue());
     mono_full_disp = new MonologueFullDisplay(mono);
