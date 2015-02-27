@@ -2,6 +2,9 @@ var GamePlayScene = function(game, stage)
 {
   var self = this;
 
+  var BigFont = "30px Courrier";
+  var SmallFont = "30px Courrier";
+
   var assetter;
   var dbugger; //'debugger' is a keyword... (why.)
   var drawer;
@@ -15,8 +18,33 @@ var GamePlayScene = function(game, stage)
     self.text = str;
     self.progress = 0;
 
-    //partitioned strings 
-    self.fullWidthLines = []; 
+    self.splitTextIntoLines = function(str, font, width)
+    {
+      var lines = [];
+      var found = 0;
+      var searched = 0;
+      var tentative_search = 0;
+
+      stage.drawCanv.context.font=font;
+      console.log(stage.drawCanv.context.measureText(self.text).width);
+      while(found < str.length)
+      {
+        searched = str.indexOf(" ",found);
+        tentative_search = str.indexOf(" ",searched+1);
+        if(tentative_search == -1) tentative_search = str.length;
+        while(stage.drawCanv.context.measureText(str.substring(found,tentative_search)).width < width && searched != tentative_search)
+        {
+          searched = tentative_search;
+          tentative_search = str.indexOf(" ",searched+1);
+          if(tentative_search == -1) tentative_search = str.length;
+        }
+        lines.push(str.substring(found,searched));
+        found = searched;
+      }
+
+      return lines;
+    }
+    self.fullWidthLines = self.splitTextIntoLines(self.text,BigFont,500);
 
     self.key = function(k)
     {
@@ -96,6 +124,7 @@ var GamePlayScene = function(game, stage)
     tgen = new TextGen();
 
     mono = new Monologue(tgen.getMonologue());
+    console.log(mono.fullWidthLines);
     mono_disp = new MonologueDisplay(mono);
     timer = new Timer();
 
