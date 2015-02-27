@@ -167,10 +167,13 @@ var GamePlayScene = function(game, stage)
     self.w = w;
     self.h = h;
 
+    self.t = 0;
+
     self.scenario = scen;
     self.monologue = mono;
     self.lines = self.monologue.splitTextIntoLines(BigFont,self.w);
     self.lineCounts = self.monologue.getCountsForLines(self.lines);
+    self.lastKnownProgress = 0;
 
     self.draw = function(canv, off)
     {
@@ -194,8 +197,11 @@ var GamePlayScene = function(game, stage)
 
       //Red prompt
       self.scenario.shaker.randomize();
-      if(self.monologue.disabled) canv.context.fillStyle="#AA0000";
-      else                        canv.context.fillStyle="#FF0000";
+      if(self.lastKnownProgress != self.monologue.progress) self.t = 20;
+      self.lastKnownProgress = self.monologue.progress;
+      if(self.monologue.disabled)      canv.context.fillStyle="#AA0000";
+      else if(Math.round(self.t/20)%2) canv.context.fillStyle="#FF0000";
+      else                             canv.context.fillStyle="#999999";
       for(var i = lineOn; i < lineOn+lines && i <self.lines.length; i++)
       {
         if(self.monologue.progress >= self.lineCounts[i])
@@ -228,6 +234,11 @@ var GamePlayScene = function(game, stage)
             canv.context.fillText(self.lines[i].substring(0,p),self.x+self.scenario.shaker.x,self.y+(BigFontPx*(i-lineOn))+self.scenario.shaker.y-off);
         }
       }
+    }
+
+    self.tick = function()
+    {
+      self.t++;
     }
   }
 
@@ -324,6 +335,7 @@ var GamePlayScene = function(game, stage)
     self.tick = function()
     {
       if(self.bump > 0) self.bump--;
+      self.mono_disp.tick();
     }
 
     self.draw = function(canv)
@@ -363,6 +375,7 @@ var GamePlayScene = function(game, stage)
     self.tick = function()
     {
       if(self.bump > 0) self.bump--;
+      self.mono_disp.tick();
     }
 
     self.draw = function(canv)
