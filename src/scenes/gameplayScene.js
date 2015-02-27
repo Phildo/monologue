@@ -476,7 +476,14 @@ var GamePlayScene = function(game, stage)
 
     self.tick = function()
     {
-
+      if(self.timer.t == self.timer.total)
+      {
+        keyer.unregister(self.mono);
+        ticker.unregister(self.mono);
+        ticker.unregister(self.bubb);
+        drawer.unregister(self.bubb);
+        ticker.unregister(self.timer);
+      }
     }
   }
 
@@ -517,6 +524,7 @@ var GamePlayScene = function(game, stage)
 
     cur_scen = 0;
     scenarios[cur_scen].begin();
+    ticker.register(scenarios[cur_scen]);
   };
 
   self.tick = function()
@@ -534,8 +542,10 @@ var GamePlayScene = function(game, stage)
   self.goToScenario = function(s)
   {
     scenarios[cur_scen].end();
+    ticker.unregister(scenarios[cur_scen]);
     cur_scen = s;
     scenarios[cur_scen].begin();
+    ticker.register(scenarios[cur_scen]);
   }
 
   self.cleanup = function()
