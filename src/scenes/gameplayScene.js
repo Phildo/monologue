@@ -543,8 +543,9 @@ var GamePlayScene = function(game, stage)
     self.train;
     self.villain;
     self.hero;
+    self.fade;
     self.mode;
-    self.mode1tweenhack;
+    self.modetweenhack;
 
     self.begin = function()
     {
@@ -556,8 +557,9 @@ var GamePlayScene = function(game, stage)
       self.train = new Train(self,self.mono);
       self.villain = new Villain(self);
       self.hero = new Hero(self);
+      self.fade = new Fade(self);
       self.mode = 0;
-      self.mode1tweenhack = 0;
+      self.modetweenhack = 0;
 
       keyer.register(self.mono);
       ticker.register(self.mono);
@@ -570,6 +572,7 @@ var GamePlayScene = function(game, stage)
       drawer.register(self.train);
       ticker.register(self.villain);
       drawer.register(self.hero);
+      drawer.register(self.fade);
     }
 
     self.end = function()
@@ -585,6 +588,7 @@ var GamePlayScene = function(game, stage)
       drawer.unregister(self.villain);
       ticker.unregister(self.villain);
       drawer.unregister(self.hero);
+      drawer.unregister(self.fade);
     }
 
     // 0 = play
@@ -597,22 +601,22 @@ var GamePlayScene = function(game, stage)
         if(self.timer.t == self.timer.total)
         {
           keyer.unregister(self.mono);
-          ticker.unregister(self.mono);
-          ticker.unregister(self.bubb);
           drawer.unregister(self.bubb);
           ticker.unregister(self.timer);
           self.mode = 1;
         }
         else if(self.mono.progress == self.mono.text.length)
         {
+          keyer.unregister(self.mono);
           self.mode = 2;
         }
       }
       else if(self.mode == 1)
       {
-        if(self.mode1tweenhack < 110)
+        var tweenlen = 110;
+        if(self.modetweenhack < tweenlen)
         {
-          self.mode1tweenhack++;
+          self.modetweenhack++;
           self.hero.x -= 4;
         }
         else
@@ -622,7 +626,16 @@ var GamePlayScene = function(game, stage)
       }
       else if(self.mode == 2)
       {
-
+        var tweenlen = 50;
+        if(self.modetweenhack < tweenlen)
+        {
+          self.modetweenhack++;
+          if(self.modetweenhack > 30)
+          {
+            self.fade.t = ((self.modetweenhack-30)/(tweenlen-30));
+          }
+        }
+        else scene.goToScenario(2);
       }
     }
   }
@@ -638,7 +651,7 @@ var GamePlayScene = function(game, stage)
     self.villain;
     self.fade;
     self.mode;
-    self.mode1tweenhack;
+    self.modetweenhack;
 
     self.begin = function()
     {
@@ -649,7 +662,7 @@ var GamePlayScene = function(game, stage)
       self.villain = new Villain(self);
       self.fade = new Fade(self);
       self.mode = 0;
-      self.mode1tweenhack = 0;
+      self.modetweenhack = 0;
 
       keyer.register(self.mono);
       ticker.register(self.mono);
@@ -690,21 +703,98 @@ var GamePlayScene = function(game, stage)
       else if(self.mode == 1)
       {
         var tweenlen = 110;
-        if(self.mode1tweenhack < tweenlen)
+        if(self.modetweenhack < tweenlen)
         {
-          self.mode1tweenhack++;
-          if(self.mode1tweenhack > 20)
+          self.modetweenhack++;
+          if(self.modetweenhack > 20)
           {
-            self.fade.t = ((self.mode1tweenhack-20)/(tweenlen-20));
+            self.fade.t = ((self.modetweenhack-20)/(tweenlen-20));
           }
-          if(self.mode1tweenhack >= tweenlen)
+        }
+        else scene.goToScenario(0);
+      }
+    }
+  }
+
+  var Scenario3 = function()
+  {
+    var self = this;
+
+    self.mono;
+    self.mono_full_disp;
+    self.bubb;
+    self.shaker;
+    self.villain;
+    self.fade;
+    self.mode;
+    self.modetweenhack;
+
+    self.begin = function()
+    {
+      self.mono = new Monologue(self,tgen.getMonologue());
+      self.mono_full_disp = new MonologueFullDisplay(self,self.mono);
+      self.bubb = new TimelessBubbleDisplay(self,self.mono);
+      self.shaker = new Shaker(self);
+      self.villain = new Villain(self);
+      self.fade = new Fade(self);
+      self.mode = 0;
+      self.modetweenhack = 0;
+
+      keyer.register(self.mono);
+      ticker.register(self.mono);
+      drawer.register(self.mono_full_disp);
+      drawer.register(self.bubb);
+      ticker.register(self.bubb);
+      ticker.register(self.shaker);
+      drawer.register(self.villain);
+      ticker.register(self.villain);
+      drawer.register(self.fade);
+    }
+
+    self.end = function()
+    {
+      keyer.unregister(self.mono);
+      ticker.unregister(self.mono);
+      drawer.unregister(self.mono_full_disp);
+      drawer.unregister(self.bubb);
+      ticker.unregister(self.bubb);
+      ticker.unregister(self.shaker);
+      drawer.unregister(self.villain);
+      ticker.unregister(self.villain);
+      drawer.unregister(self.fade);
+    }
+
+    //0 = lamenting
+    //1 = fadeout
+    self.tick = function()
+    {
+      if(self.mode == 0)
+      {
+        if(self.mono.progress == self.mono.text.length)
+        {
+          keyer.unregister(self.mono);
+          self.mode = 1;
+        }
+      }
+      else if(self.mode == 1)
+      {
+        var tweenlen = 110;
+        if(self.modetweenhack < tweenlen)
+        {
+          self.modetweenhack++;
+          if(self.modetweenhack > 20)
           {
-            scene.goToScenario(0);
+            self.fade.t = ((self.modetweenhack-20)/(tweenlen-20));
+          }
+          if(self.modetweenhack >= tweenlen)
+          {
+            game.nextScene();
           }
         }
       }
     }
   }
+
 
 
   var scenarios;
@@ -743,6 +833,8 @@ var GamePlayScene = function(game, stage)
     scenarios.push(main);
     var ohno = new Scenario2();
     scenarios.push(ohno);
+    var hooray = new Scenario3();
+    scenarios.push(hooray);
 
     cur_scen = 0;
     scenarios[cur_scen].begin();

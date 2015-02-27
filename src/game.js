@@ -33,6 +33,7 @@ var Game = function(init)
   {
     scenes[currentScene].cleanup();
     currentScene++;
+    if(currentScene >= scenes.length) currentScene = 1;
     scenes[currentScene].ready();
   };
 };
