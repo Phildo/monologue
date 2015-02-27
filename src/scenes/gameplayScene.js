@@ -13,6 +13,7 @@ var GamePlayScene = function(game, stage)
   var ticker;
   var keyer;
   var tgen;
+  var audio;
 
   var Monologue = function(str)
   {
@@ -183,6 +184,9 @@ var GamePlayScene = function(game, stage)
     drawer = new Drawer({source:stage.drawCanv});
     keyer = new Keyer({source:stage.dispCanv.canvas});
     tgen = new TextGen();
+    audio = new Aud("assets/AllTiedUp.ogg");
+    audio.load();
+    audio.play();
 
     mono = new Monologue(tgen.getMonologue());
     mono_disp = new MonologueDisplay(mono);
