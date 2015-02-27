@@ -240,7 +240,7 @@ var TextGen = function()
       "Drats! I've been foiled again",
       //"How in tarnations"
       "Dagnabbit! They got away again...",
-      "I can't believe I let them escape"
+      "I can't believe I let them escape!"
     ];
 
     return failureMonologue[Math.floor(Math.random() * failureMonologue.length)];
@@ -376,7 +376,7 @@ var TextGen = function()
       rE(WW_RIVER) + 
       ". The name is " + 
       rE(WW_NAME_VILLAIN) + 
-      ". Don't forget it." 
+      ". Don't forget it!" 
       );
   }
 
@@ -405,11 +405,3 @@ document.write(a.getMonologue());
 
 //"Alright listen up you yellow belly. You've roamed these streets for too long Sherrif. After my group robs your store and robs your store, the whole country"
 //" will be aware of the most crazy bandit this side of the mis river. The names WW_NAME_VILLAIN. Farewell."
-
-
-
-
-
-//failure getMonologue
-//msuccess - wow i didn't think it'd actuallyhappen
-//intro screen 
