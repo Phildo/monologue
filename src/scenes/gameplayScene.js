@@ -4,7 +4,7 @@ var GamePlayScene = function(game, stage)
 
   var BigFontPx = 20;
   var BigFont = BigFontPx+"px Courrier";
-  var SmallFontPx = 30;
+  var SmallFontPx = 10;
   var SmallFont = SmallFontPx+"px Courrier";
 
   var assetter;
@@ -21,7 +21,7 @@ var GamePlayScene = function(game, stage)
     self.text = str;
     self.progress = 0;
 
-    self.splitTextIntoLines = function(str, font, width)
+    self.splitTextIntoLines = function(font, width)
     {
       var lines = [];
       var found = 0;
@@ -29,18 +29,18 @@ var GamePlayScene = function(game, stage)
       var tentative_search = 0;
 
       stage.drawCanv.context.font=font;
-      while(found < str.length)
+      while(found < self.text.length)
       {
-        searched = str.indexOf(" ",found);
-        tentative_search = str.indexOf(" ",searched+1);
-        if(tentative_search == -1) tentative_search = str.length;
-        while(stage.drawCanv.context.measureText(str.substring(found,tentative_search)).width < width && searched != tentative_search)
+        searched = self.text.indexOf(" ",found);
+        tentative_search = self.text.indexOf(" ",searched+1);
+        if(tentative_search == -1) tentative_search = self.text.length;
+        while(stage.drawCanv.context.measureText(self.text.substring(found,tentative_search)).width < width && searched != tentative_search)
         {
           searched = tentative_search;
-          tentative_search = str.indexOf(" ",searched+1);
-          if(tentative_search == -1) tentative_search = str.length;
+          tentative_search = self.text.indexOf(" ",searched+1);
+          if(tentative_search == -1) tentative_search = self.text.length;
         }
-        lines.push(str.substring(found,searched));
+        lines.push(self.text.substring(found,searched));
         found = searched;
       }
 
@@ -57,9 +57,6 @@ var GamePlayScene = function(game, stage)
       return counts;
     }
 
-    self.fullWidthLines = self.splitTextIntoLines(self.text,BigFont,stage.drawCanv.canvas.width);
-    self.fullWidthLineCounts = self.getCountsForLines(self.fullWidthLines);
-
     self.key = function(k)
     {
       if(k == self.text.substring(self.progress,self.progress+1).toLowerCase())
@@ -68,7 +65,7 @@ var GamePlayScene = function(game, stage)
     }
   }
 
-  var MonologueDisplay = function(mono)
+  var MonologueFullDisplay = function(mono)
   {
     var self = this;
 
@@ -76,49 +73,105 @@ var GamePlayScene = function(game, stage)
     self.y = 0+BigFontPx;
 
     self.monologue = mono;
+    self.lines = self.monologue.splitTextIntoLines(BigFont,stage.drawCanv.canvas.width);
+    self.lineCounts = self.monologue.getCountsForLines(self.lines);
+
     self.draw = function(canv)
     {
       canv.context.font=BigFont;
 
-      //Gray background
-      canv.context.fillStyle="#999999";
-      for(var i = 0; i < self.monologue.fullWidthLines.length; i++)
-        canv.context.fillText(self.monologue.fullWidthLines[i],self.x+shaker.x,self.y+(BigFontPx*i)+shaker.y);
-
       //Red prompt
       canv.context.fillStyle="#FF0000";
-      for(var i = 0; i < self.monologue.fullWidthLines.length; i++)
+      for(var i = 0; i < self.lines.length; i++)
       {
-        if(self.monologue.progress >= self.monologue.fullWidthLineCounts[i])
-          canv.context.fillText(self.monologue.fullWidthLines[i],self.x+shaker.x,self.y+(BigFontPx*i)+shaker.y);
+        if(self.monologue.progress >= self.lineCounts[i])
+          canv.context.fillText(self.lines[i],self.x+shaker.x,self.y+(BigFontPx*i)+shaker.y);
         else
         {
           var p;
           if(i == 0) p = self.monologue.progress;
-          else       p = self.monologue.progress-self.monologue.fullWidthLineCounts[i-1];
-          if(self.monologue.fullWidthLines[i].substring(p,p+1) == " ")
-            canv.context.fillText(self.monologue.fullWidthLines[i].substring(0,p)+"_",self.x+shaker.x,self.y+(BigFontPx*i)+shaker.y);
+          else       p = self.monologue.progress-self.lineCounts[i-1];
+          if(self.lines[i].substring(p,p+1) == " ")
+            canv.context.fillText(self.lines[i].substring(0,p)+"_",self.x+shaker.x,self.y+(BigFontPx*i)+shaker.y);
           else
-            canv.context.fillText(self.monologue.fullWidthLines[i].substring(0,p+1),self.x+shaker.x,self.y+(BigFontPx*i)+shaker.y);
+            canv.context.fillText(self.lines[i].substring(0,p+1),self.x+shaker.x,self.y+(BigFontPx*i)+shaker.y);
         }
       }
 
       //Black completed
       canv.context.fillStyle="#000000";
-      for(var i = 0; i < self.monologue.fullWidthLines.length; i++)
+      for(var i = 0; i < self.lines.length; i++)
       {
-        if(self.monologue.progress >= self.monologue.fullWidthLineCounts[i])
-          canv.context.fillText(self.monologue.fullWidthLines[i],self.x+shaker.x,self.y+(BigFontPx*i)+shaker.y);
+        if(self.monologue.progress >= self.lineCounts[i])
+          canv.context.fillText(self.lines[i],self.x+shaker.x,self.y+(BigFontPx*i)+shaker.y);
         else
         {
             var p;
             if(i == 0) p = self.monologue.progress;
-            else p = self.monologue.progress-self.monologue.fullWidthLineCounts[i-1];
-            canv.context.fillText(self.monologue.fullWidthLines[i].substring(0,p),self.x+shaker.x,self.y+(BigFontPx*i)+shaker.y);
+            else p = self.monologue.progress-self.lineCounts[i-1];
+            canv.context.fillText(self.lines[i].substring(0,p),self.x+shaker.x,self.y+(BigFontPx*i)+shaker.y);
         }
       }
     }
   }
+
+  var MonologueBubbleDisplay = function(mono)
+  {
+    var self = this;
+
+    self.x = 100;
+    self.y = 200+SmallFontPx;
+    self.w = 100;
+    self.h = 100;
+
+    self.monologue = mono;
+    self.lines = self.monologue.splitTextIntoLines(SmallFont,self.w);
+    self.lineCounts = self.monologue.getCountsForLines(self.lines);
+
+    self.draw = function(canv)
+    {
+      canv.context.font=SmallFont;
+
+      //Gray background
+      canv.context.fillStyle="#999999";
+      for(var i = 0; i < self.lines.length; i++)
+        canv.context.fillText(self.lines[i],self.x+shaker.x,self.y+(SmallFontPx*i)+shaker.y);
+
+      //Red prompt
+      canv.context.fillStyle="#FF0000";
+      for(var i = 0; i < self.lines.length; i++)
+      {
+        if(self.monologue.progress >= self.lineCounts[i])
+          canv.context.fillText(self.lines[i],self.x+shaker.x,self.y+(SmallFontPx*i)+shaker.y);
+        else
+        {
+          var p;
+          if(i == 0) p = self.monologue.progress;
+          else       p = self.monologue.progress-self.lineCounts[i-1];
+          if(self.lines[i].substring(p,p+1) == " ")
+            canv.context.fillText(self.lines[i].substring(0,p)+"_",self.x+shaker.x,self.y+(SmallFontPx*i)+shaker.y);
+          else
+            canv.context.fillText(self.lines[i].substring(0,p+1),self.x+shaker.x,self.y+(SmallFontPx*i)+shaker.y);
+        }
+      }
+
+      //Black completed
+      canv.context.fillStyle="#000000";
+      for(var i = 0; i < self.lines.length; i++)
+      {
+        if(self.monologue.progress >= self.lineCounts[i])
+          canv.context.fillText(self.lines[i],self.x+shaker.x,self.y+(SmallFontPx*i)+shaker.y);
+        else
+        {
+            var p;
+            if(i == 0) p = self.monologue.progress;
+            else p = self.monologue.progress-self.lineCounts[i-1];
+            canv.context.fillText(self.lines[i].substring(0,p),self.x+shaker.x,self.y+(SmallFontPx*i)+shaker.y);
+        }
+      }
+    }
+  }
+
 
   var Timer = function()
   {
@@ -172,7 +225,8 @@ var GamePlayScene = function(game, stage)
   }
 
   var mono;
-  var mono_disp;
+  var mono_full_disp;
+  var mono_bubb_disp;
   var timer;
   var shaker;
 
@@ -186,15 +240,17 @@ var GamePlayScene = function(game, stage)
     tgen = new TextGen();
     audio = new Aud("assets/AllTiedUp.ogg");
     audio.load();
-    audio.play();
+    //audio.play();
 
     mono = new Monologue(tgen.getMonologue());
-    mono_disp = new MonologueDisplay(mono);
+    mono_full_disp = new MonologueFullDisplay(mono);
+    mono_bubb_disp = new MonologueBubbleDisplay(mono);
     timer = new Timer();
     shaker = new Shaker();
 
     keyer.register(mono);
-    drawer.register(mono_disp);
+    drawer.register(mono_full_disp);
+    drawer.register(mono_bubb_disp);
     drawer.register(timer);
     ticker.register(timer);
     ticker.register(shaker);
