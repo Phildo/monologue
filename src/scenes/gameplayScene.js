@@ -4,7 +4,7 @@ var GamePlayScene = function(game, stage)
 
   var BigFontPx = 20;
   var BigFont = BigFontPx+"px vg_font";
-  var SmallFontPx = 10;
+  var SmallFontPx = 12;
   var SmallFont = SmallFontPx+"px vg_font";
 
   var assetter;
@@ -122,7 +122,7 @@ var GamePlayScene = function(game, stage)
 
     self.x = 100;
     self.y = 100+BigFontPx;
-    self.w = 300;
+    self.w = 400;
     self.h = 100;
 
     self.monologue = mono;
