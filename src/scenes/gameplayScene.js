@@ -42,6 +42,7 @@ var GamePlayScene = function(game, stage)
           tentative_search = self.text.indexOf(" ",searched+1);
           if(tentative_search == -1) tentative_search = self.text.length;
         }
+        if(self.text.substring(searched, searched+1) == " ") searched++;
         lines.push(self.text.substring(found,searched));
         found = searched;
       }
@@ -122,14 +123,14 @@ var GamePlayScene = function(game, stage)
     }
   }
 
-  var MonologueBubbleDisplay = function(mono)
+  var MonologueBubbleDisplay = function(mono, x,y,w,h)
   {
     var self = this;
 
-    self.x = 100;
-    self.y = 100+BigFontPx;
-    self.w = 400;
-    self.h = 100;
+    self.x = x;
+    self.y = y+BigFontPx;
+    self.w = w;
+    self.h = h;
 
     self.monologue = mono;
     self.lines = self.monologue.splitTextIntoLines(BigFont,self.w);
@@ -199,31 +200,75 @@ var GamePlayScene = function(game, stage)
     self.t = 0;
     self.total = 1000;
 
-    self.x = 50;
-    self.y = 100;
-    self.w = 50;
-    self.h = 50;
+    self.tick = function()
+    {
+      if(self.t < self.total) self.t++;
+      else self.t = 0;
+    }
+  }
+
+  var TimerDisplay = function(timer, x,y,w,h)
+  {
+    var self = this;
+    self.t = timer;
+
+    self.x = x;
+    self.y = y;
+    self.w = w;
+    self.h = h;
 
     self.draw = function(canv)
     {
+      //draw red
       shaker.randomize();
-      canv.context.strokeStyle = "#00FFFF";
-      canv.context.lineWidth = 5;
+      canv.context.strokeStyle = "#FF0000";
+      canv.context.lineWidth = 10;
       canv.context.beginPath();
       canv.context.arc(
       self.x+self.w/2+shaker.x,
       self.y+self.h/2+shaker.y,
       (self.w/2)-5,
       3*Math.PI/2,
-      (3*(Math.PI/2)+(self.t/self.total)*(2*Math.PI))%(2*Math.PI)+0.01,
+      (3*(Math.PI/2)+(self.t.t/self.t.total)*(2*Math.PI))%(2*Math.PI)+0.01,
+      true);
+      canv.context.stroke();
+
+      //draw black
+      shaker.randomize();
+      canv.context.strokeStyle = "#000000";
+      canv.context.lineWidth = 10;
+      canv.context.beginPath();
+      canv.context.arc(
+      self.x+self.w/2+shaker.x,
+      self.y+self.h/2+shaker.y,
+      (self.w/2)-5,
+      3*Math.PI/2,
+      (3*(Math.PI/2)+(self.t.t/self.t.total)*(2*Math.PI))%(2*Math.PI)+0.01,
       true);
       canv.context.stroke();
     }
+  }
 
-    self.tick = function()
+  var BubbleDisplay = function(mono, timer)
+  {
+    var self = this;
+
+    self.x = 100;
+    self.y = 100;
+    self.w = 400;
+    self.h = 85;
+
+    self.monologue = mono;
+    self.timer = timer;
+    self.mono_disp = new MonologueBubbleDisplay(self.monologue, self.x+(self.h), self.y+10, self.w-(self.h), self.h);
+    self.timer_disp = new TimerDisplay(self.timer, self.x+10, self.y+10, self.h-20, self.h-20);
+
+    self.draw = function(canv)
     {
-      if(self.t < self.total) self.t++;
-      else self.t = 0;
+      canv.context.fillStyle = "#FFFFFF";
+      canv.context.fillRect(self.x, self.y, self.w, self.h);
+      self.mono_disp.draw(canv);
+      self.timer_disp.draw(canv);
     }
   }
 
@@ -285,7 +330,7 @@ var GamePlayScene = function(game, stage)
 
   var mono;
   var mono_full_disp;
-  var mono_bubb_disp;
+  var bubb;
   var timer;
   var shaker;
   var villain;
@@ -306,15 +351,14 @@ var GamePlayScene = function(game, stage)
 
     mono = new Monologue(tgen.getMonologue());
     mono_full_disp = new MonologueFullDisplay(mono);
-    mono_bubb_disp = new MonologueBubbleDisplay(mono);
     timer = new Timer();
+    bubb = new BubbleDisplay(mono,timer);
     shaker = new Shaker();
     villain = new Villain();
 
     keyer.register(mono);
     drawer.register(mono_full_disp);
-    drawer.register(mono_bubb_disp);
-    drawer.register(timer);
+    drawer.register(bubb);
     ticker.register(timer);
     ticker.register(shaker);
     drawer.register(villain);
