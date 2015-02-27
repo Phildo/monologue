@@ -33,9 +33,9 @@ var GamePlayScene = function(game, stage)
       while(found < self.text.length)
       {
         searched = self.text.indexOf(" ",found);
+        if(searched == -1) searched = self.text.length;
         tentative_search = self.text.indexOf(" ",searched+1);
         if(tentative_search == -1) tentative_search = self.text.length;
-        searched = tentative_search; //guarantee at least one word
         while(stage.drawCanv.context.measureText(self.text.substring(found,tentative_search)).width < width && searched != self.text.length)
         {
           searched = tentative_search;
@@ -260,7 +260,7 @@ var GamePlayScene = function(game, stage)
 
     self.monologue = mono;
     self.timer = timer;
-    self.mono_disp = new MonologueBubbleDisplay(self.monologue, self.x+(self.h), self.y+10, self.w-(self.h), self.h);
+    self.mono_disp = new MonologueBubbleDisplay(self.monologue, self.x+(self.h), self.y+10, self.w-(self.h)-20, self.h);
     self.timer_disp = new TimerDisplay(self.timer, self.x+10, self.y+10, self.h-20, self.h-20);
 
     self.draw = function(canv)
