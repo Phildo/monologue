@@ -122,7 +122,7 @@ var GamePlayScene = function(game, stage)
     var self = this;
 
     self.x = 100;
-    self.y = 200+BigFontPx;
+    self.y = 100+BigFontPx;
     self.w = 300;
     self.h = 100;
 
@@ -189,10 +189,10 @@ var GamePlayScene = function(game, stage)
     self.t = 0;
     self.total = 1000;
 
-    self.x = 200;
-    self.y = 200;
-    self.w = 200;
-    self.h = 200;
+    self.x = 50;
+    self.y = 100;
+    self.w = 50;
+    self.h = 50;
 
     self.draw = function(canv)
     {
