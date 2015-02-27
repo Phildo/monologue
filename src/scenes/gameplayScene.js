@@ -120,6 +120,7 @@ var GamePlayScene = function(game, stage)
       canv.context.font=SmallFont;
 
       //Red prompt
+      /*
       if(self.monologue.disabled) canv.context.fillStyle="#AA0000";
       else                        canv.context.fillStyle="#FF0000";
       for(var i = 0; i < self.lines.length; i++)
@@ -137,6 +138,7 @@ var GamePlayScene = function(game, stage)
             canv.context.fillText(self.lines[i].substring(0,p+1),self.x+self.scenario.shaker.x,self.y+(SmallFontPx*i)+self.scenario.shaker.y);
         }
       }
+      */
 
       //Black completed
       if(self.monologue.disabled) canv.context.fillStyle="#444444";
@@ -235,7 +237,7 @@ var GamePlayScene = function(game, stage)
 
     self.scenario = scen;
     self.t = 0;
-    self.total = 2000;
+    self.total = 2500;
 
     self.started = false;
 
@@ -577,6 +579,7 @@ var GamePlayScene = function(game, stage)
 
     self.begin = function()
     {
+      tgen = new TextGen();
       self.mono = new Monologue(self,tgen.getMonologue());
       self.mono_full_disp = new MonologueFullDisplay(self,self.mono);
       self.timer = new Timer(self);
@@ -689,7 +692,8 @@ var GamePlayScene = function(game, stage)
 
     self.begin = function()
     {
-      self.mono = new Monologue(self,tgen.getMonologue());
+      tgen = new TextGen();
+      self.mono = new Monologue(self,tgen.getFailureMonologue());
       self.mono_full_disp = new MonologueFullDisplay(self,self.mono);
       self.bubb = new TimelessBubbleDisplay(self,self.mono);
       self.shaker = new Shaker(self);
@@ -769,7 +773,8 @@ var GamePlayScene = function(game, stage)
 
     self.begin = function()
     {
-      self.mono = new Monologue(self,tgen.getMonologue());
+      tgen = new TextGen();
+      self.mono = new Monologue(self,tgen.getSuccessMonologue());
       self.mono_full_disp = new MonologueFullDisplay(self,self.mono);
       self.bubb = new TimelessBubbleDisplay(self,self.mono);
       self.shaker = new Shaker(self);

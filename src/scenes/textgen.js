@@ -208,7 +208,7 @@ var TextGen = function()
 
   self.getMonologue = function()
   {
-    //return "this is a test"
+
 
     var r = Math.floor(Math.random() * 3) // 3 = Phrases
 
@@ -228,9 +228,38 @@ var TextGen = function()
     //return randomshit[Math.floor(Math.random()*randomshit.length)];
    
     //return getWWP3();
-    return getWWP2();
+    //return getWWP2();
     //return getWWP1();
-}
+  }
+
+  self.getFailureMonologue = function()
+  {
+
+    var failureMonologue = 
+    [
+      "Drats! I've been foiled again",
+      //"How in tarnations"
+      "Dagnabbit! They got away again...",
+      "I can't believe I let them escape"
+    ];
+
+    return failureMonologue[Math.floor(Math.random() * failureMonologue.length)];
+  }
+
+  self.getSuccessMonologue = function()
+  {
+
+    var successMonologue = 
+    [
+      "Wow. I actually did it this time...",
+      "Finally! Nobody can stop me!",
+      "They're gone at last!",
+      "Yeehaw! They've finally been defeated!"
+    ];
+
+    return successMonologue[Math.floor(Math.random() * successMonologue.length)];
+
+  }
 
   var getWWP1 = function()
   {
@@ -328,11 +357,11 @@ var TextGen = function()
       " these " + 
       rE(WW_NONSPECIFIC_PLACES_PLURAL) + 
       " for too long. After my " + 
-      rE(WW_GROUP) + " " +
+      rE(WW_GROUP) +
       " and I " + 
-      removeAndReturnE(WW_VERB_RANSACK) + " " +
+      removeAndReturnE(WW_VERB_RANSACK) +
       " your " + 
-      removeAndReturnE(WW_ESTABLISHMENT) + " " +
+      removeAndReturnE(WW_ESTABLISHMENT) +
       " and " + 
       rE(WW_VERB_RANSACK) + 
       " the " + 
@@ -355,8 +384,10 @@ var TextGen = function()
 
 
 //test shite
-//var a = new TextGen(); //
-//document.write(a.getMonologue());
+var a = new TextGen(); //
+document.write(a.getMonologue());
+
+
 
 //Make a few templates, randomly populate them with context relevant phrases.
 
