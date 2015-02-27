@@ -384,8 +384,8 @@ var TextGen = function()
 
 
 //test shite
-var a = new TextGen(); //
-document.write(a.getMonologue());
+//var a = new TextGen(); //
+//document.write(a.getMonologue());
 
 
 
