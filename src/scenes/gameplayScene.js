@@ -490,15 +490,17 @@ var GamePlayScene = function(game, stage)
     self.scenario = scen;
     self.monologue = mono;
 
-    self.start_x = 340;
-    self.start_y = 380;
-    self.start_w = 50;
-    self.start_h = 50;
+    self.start_x = 350;
+    self.start_y = 410;
+    self.start_w = 20;
+    self.start_h = 15;
 
-    self.end_x = 180;
-    self.end_y = 280;
-    self.end_w = 300;
-    self.end_h = 300;
+    self.end_x = 220;
+    self.end_y = 380;
+    self.end_w = 200;
+    self.end_h = 150;
+
+    self.sin_seed = 0;
 
     var lerp = function(s,e,t)
     {
@@ -508,10 +510,32 @@ var GamePlayScene = function(game, stage)
     {
       self.scenario.shaker.randomize();
       canv.context.fillStyle = "#FFFFFF";
-      canv.context.fillRect(lerp(self.start_x,self.end_x,self.monologue.progress/self.monologue.text.length),
-                            lerp(self.start_y,self.end_y,self.monologue.progress/self.monologue.text.length),
-                            lerp(self.start_w,self.end_w,self.monologue.progress/self.monologue.text.length),
-                            lerp(self.start_h,self.end_h,self.monologue.progress/self.monologue.text.length));
+
+      var x = lerp(self.start_x,self.end_x,self.monologue.progress/self.monologue.text.length);
+      var y = lerp(self.start_y,self.end_y,self.monologue.progress/self.monologue.text.length);
+      var w = lerp(self.start_w,self.end_w,self.monologue.progress/self.monologue.text.length);
+      var h = lerp(self.start_h,self.end_h,self.monologue.progress/self.monologue.text.length);
+
+      var sin = Math.sin(self.sin_seed);
+
+      if(sin < 0) sin = (-sin*sin);
+      sin /= 4;
+      sin += 1.25;
+      y -= ((h*sin)-h);
+      h *= sin;
+
+      sin = Math.sin(self.sin_seed+Math.PI);
+      if(sin < 0) sin = (-sin*sin);
+      sin /= 4;
+      sin += 1.25;
+      x -= ((w*sin)-w)/2;
+      w *= sin;
+
+      canv.context.fillRect(x,y,w,h);
+    }
+    self.tick = function()
+    {
+      self.sin_seed+=0.2;
     }
   }
 
@@ -570,6 +594,7 @@ var GamePlayScene = function(game, stage)
       ticker.register(self.shaker);
       drawer.register(self.villain);
       drawer.register(self.train);
+      ticker.register(self.train);
       ticker.register(self.villain);
       drawer.register(self.hero);
       drawer.register(self.fade);
@@ -585,6 +610,7 @@ var GamePlayScene = function(game, stage)
       ticker.unregister(self.timer);
       ticker.unregister(self.shaker);
       drawer.unregister(self.train);
+      ticker.unregister(self.train);
       drawer.unregister(self.villain);
       ticker.unregister(self.villain);
       drawer.unregister(self.hero);
