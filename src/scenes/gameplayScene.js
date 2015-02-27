@@ -17,9 +17,11 @@ var GamePlayScene = function(game, stage)
   var mermer_audio;
   var cough_audio;
 
-  var Monologue = function(str)
+  var Monologue = function(scen, str)
   {
     var self = this;
+
+    self.scenario = scen;
     self.text = str;
     self.progress = 0;
     self.disabled = 0;
@@ -70,19 +72,19 @@ var GamePlayScene = function(game, stage)
     {
       if(self.disabled)
       {
-        bubb.bumpit();
+        self.scenario.bubb.bumpit();
       }
       else if(k == self.text.substring(self.progress,self.progress+1).toLowerCase())
       {
-        bubb.bumpit();
+        self.scenario.bubb.bumpit();
         mermer_audio[Math.floor(Math.random()*mermer_audio.length)].play();
-        villain.talk();
+        self.scenario.villain.talk();
         self.progress++;
       }
       else
       {
         cough_audio.play();
-        shaker.shake = 10;
+        self.scenario.shaker.shake = 10;
         self.disabled = 50;
         self.revokeProgress();
       }
@@ -94,20 +96,21 @@ var GamePlayScene = function(game, stage)
     }
   }
 
-  var MonologueFullDisplay = function(mono)
+  var MonologueFullDisplay = function(scen, mono)
   {
     var self = this;
 
     self.x = 0;
     self.y = 0+SmallFontPx;
 
+    self.scenario = scen;
     self.monologue = mono;
     self.lines = self.monologue.splitTextIntoLines(SmallFont,stage.drawCanv.canvas.width);
     self.lineCounts = self.monologue.getCountsForLines(self.lines);
 
     self.draw = function(canv)
     {
-      shaker.randomize();
+      self.scenario.shaker.randomize();
       canv.context.font=SmallFont;
 
       //Red prompt
@@ -116,16 +119,16 @@ var GamePlayScene = function(game, stage)
       for(var i = 0; i < self.lines.length; i++)
       {
         if(self.monologue.progress >= self.lineCounts[i])
-          canv.context.fillText(self.lines[i],self.x+shaker.x,self.y+(SmallFontPx*i)+shaker.y);
+          canv.context.fillText(self.lines[i],self.x+self.scenario.shaker.x,self.y+(SmallFontPx*i)+self.scenario.shaker.y);
         else
         {
           var p;
           if(i == 0) p = self.monologue.progress;
           else       p = self.monologue.progress-self.lineCounts[i-1];
           if(self.lines[i].substring(p,p+1) == " ")
-            canv.context.fillText(self.lines[i].substring(0,p)+"_",self.x+shaker.x,self.y+(SmallFontPx*i)+shaker.y);
+            canv.context.fillText(self.lines[i].substring(0,p)+"_",self.x+self.scenario.shaker.x,self.y+(SmallFontPx*i)+self.scenario.shaker.y);
           else
-            canv.context.fillText(self.lines[i].substring(0,p+1),self.x+shaker.x,self.y+(SmallFontPx*i)+shaker.y);
+            canv.context.fillText(self.lines[i].substring(0,p+1),self.x+self.scenario.shaker.x,self.y+(SmallFontPx*i)+self.scenario.shaker.y);
         }
       }
 
@@ -135,19 +138,19 @@ var GamePlayScene = function(game, stage)
       for(var i = 0; i < self.lines.length; i++)
       {
         if(self.monologue.progress >= self.lineCounts[i])
-          canv.context.fillText(self.lines[i],self.x+shaker.x,self.y+(SmallFontPx*i)+shaker.y);
+          canv.context.fillText(self.lines[i],self.x+self.scenario.shaker.x,self.y+(SmallFontPx*i)+self.scenario.shaker.y);
         else
         {
             var p;
             if(i == 0) p = self.monologue.progress;
             else p = self.monologue.progress-self.lineCounts[i-1];
-            canv.context.fillText(self.lines[i].substring(0,p),self.x+shaker.x,self.y+(SmallFontPx*i)+shaker.y);
+            canv.context.fillText(self.lines[i].substring(0,p),self.x+self.scenario.shaker.x,self.y+(SmallFontPx*i)+self.scenario.shaker.y);
         }
       }
     }
   }
 
-  var MonologueBubbleDisplay = function(mono, x,y,w,h)
+  var MonologueBubbleDisplay = function(scen, mono, x,y,w,h)
   {
     var self = this;
 
@@ -156,6 +159,7 @@ var GamePlayScene = function(game, stage)
     self.w = w;
     self.h = h;
 
+    self.scenario = scen;
     self.monologue = mono;
     self.lines = self.monologue.splitTextIntoLines(BigFont,self.w);
     self.lineCounts = self.monologue.getCountsForLines(self.lines);
@@ -175,54 +179,55 @@ var GamePlayScene = function(game, stage)
       if(lineOn > 0) lineOn--;
 
       //Gray background
-      shaker.randomize();
+      self.scenario.shaker.randomize();
       canv.context.fillStyle="#999999";
       for(var i = lineOn; i < lineOn+lines && i <self.lines.length; i++)
-        canv.context.fillText(self.lines[i],self.x+shaker.x,self.y+(BigFontPx*(i-lineOn))+shaker.y-off);
+        canv.context.fillText(self.lines[i],self.x+self.scenario.shaker.x,self.y+(BigFontPx*(i-lineOn))+self.scenario.shaker.y-off);
 
       //Red prompt
-      shaker.randomize();
+      self.scenario.shaker.randomize();
       if(self.monologue.disabled) canv.context.fillStyle="#AA0000";
       else                        canv.context.fillStyle="#FF0000";
       for(var i = lineOn; i < lineOn+lines && i <self.lines.length; i++)
       {
         if(self.monologue.progress >= self.lineCounts[i])
-          canv.context.fillText(self.lines[i],self.x+shaker.x,self.y+(BigFontPx*(i-lineOn))+shaker.y-off);
+          canv.context.fillText(self.lines[i],self.x+self.scenario.shaker.x,self.y+(BigFontPx*(i-lineOn))+self.scenario.shaker.y-off);
         else
         {
           var p;
           if(i == 0) p = self.monologue.progress;
           else       p = self.monologue.progress-self.lineCounts[i-1];
           if(self.lines[i].substring(p,p+1) == " ")
-            canv.context.fillText(self.lines[i].substring(0,p)+"_",self.x+shaker.x,self.y+(BigFontPx*(i-lineOn))+shaker.y-off);
+            canv.context.fillText(self.lines[i].substring(0,p)+"_",self.x+self.scenario.shaker.x,self.y+(BigFontPx*(i-lineOn))+self.scenario.shaker.y-off);
           else
-            canv.context.fillText(self.lines[i].substring(0,p+1),self.x+shaker.x,self.y+(BigFontPx*(i-lineOn))+shaker.y-off);
+            canv.context.fillText(self.lines[i].substring(0,p+1),self.x+self.scenario.shaker.x,self.y+(BigFontPx*(i-lineOn))+self.scenario.shaker.y-off);
         }
       }
 
       //Black completed
-      shaker.randomize();
+      self.scenario.shaker.randomize();
       if(self.monologue.disabled) canv.context.fillStyle="#444444";
       else                        canv.context.fillStyle="#000000";
       for(var i = lineOn; i < lineOn+lines && i <self.lines.length; i++)
       {
         if(self.monologue.progress >= self.lineCounts[i])
-          canv.context.fillText(self.lines[i],self.x+shaker.x,self.y+(BigFontPx*(i-lineOn))+shaker.y-off);
+          canv.context.fillText(self.lines[i],self.x+self.scenario.shaker.x,self.y+(BigFontPx*(i-lineOn))+self.scenario.shaker.y-off);
         else
         {
             var p;
             if(i == 0) p = self.monologue.progress;
             else p = self.monologue.progress-self.lineCounts[i-1];
-            canv.context.fillText(self.lines[i].substring(0,p),self.x+shaker.x,self.y+(BigFontPx*(i-lineOn))+shaker.y-off);
+            canv.context.fillText(self.lines[i].substring(0,p),self.x+self.scenario.shaker.x,self.y+(BigFontPx*(i-lineOn))+self.scenario.shaker.y-off);
         }
       }
     }
   }
 
-  var Timer = function()
+  var Timer = function(scen)
   {
     var self = this;
 
+    self.scenario = scen;
     self.t = 0;
     self.total = 1000;
 
@@ -233,9 +238,11 @@ var GamePlayScene = function(game, stage)
     }
   }
 
-  var TimerDisplay = function(timer, x,y,w,h)
+  var TimerDisplay = function(scen, timer, x,y,w,h)
   {
     var self = this;
+
+    self.scenario = scen;
     self.t = timer;
 
     self.x = x;
@@ -251,13 +258,13 @@ var GamePlayScene = function(game, stage)
       self.s.randomize();
 
       //draw red
-      shaker.randomize();
+      self.scenario.shaker.randomize();
       canv.context.strokeStyle = "#FF0000";
       canv.context.lineWidth = 10;
       canv.context.beginPath();
       canv.context.arc(
-      self.x+self.w/2+shaker.x+self.s.x,
-      self.y+self.h/2+shaker.y+self.s.y-off,
+      self.x+self.w/2+self.scenario.shaker.x+self.s.x,
+      self.y+self.h/2+self.scenario.shaker.y+self.s.y-off,
       (self.w/2)-5,
       3*Math.PI/2,
       (3*(Math.PI/2)+(self.t.t/self.t.total)*(2*Math.PI))%(2*Math.PI)+0.01,
@@ -265,13 +272,13 @@ var GamePlayScene = function(game, stage)
       canv.context.stroke();
 
       //draw black
-      shaker.randomize();
+      self.scenario.shaker.randomize();
       canv.context.strokeStyle = "#000000";
       canv.context.lineWidth = 10;
       canv.context.beginPath();
       canv.context.arc(
-      self.x+self.w/2+shaker.x,
-      self.y+self.h/2+shaker.y-off,
+      self.x+self.w/2+self.scenario.shaker.x,
+      self.y+self.h/2+self.scenario.shaker.y-off,
       (self.w/2)-5,
       3*Math.PI/2,
       (3*(Math.PI/2)+(self.t.t/self.t.total)*(2*Math.PI))%(2*Math.PI)+0.01,
@@ -280,7 +287,7 @@ var GamePlayScene = function(game, stage)
     }
   }
 
-  var BubbleDisplay = function(mono, timer)
+  var BubbleDisplay = function(scen, mono, timer)
   {
     var self = this;
 
@@ -290,10 +297,11 @@ var GamePlayScene = function(game, stage)
     self.h = 115;
     self.bump = 0;
 
+    self.scenario = scen;
     self.monologue = mono;
     self.timer = timer;
-    self.mono_disp = new MonologueBubbleDisplay(self.monologue, self.x+(self.h), self.y+10, self.w-(self.h)-BigFontPx, self.h);
-    self.timer_disp = new TimerDisplay(self.timer, self.x+10, self.y+10, self.h-20, self.h-20);
+    self.mono_disp = new MonologueBubbleDisplay(self.scenario,self.monologue, self.x+(self.h), self.y+10, self.w-(self.h)-BigFontPx, self.h);
+    self.timer_disp = new TimerDisplay(self.scenario,self.timer, self.x+10, self.y+10, self.h-20, self.h-20);
 
     self.bumpit = function()
     {
@@ -307,23 +315,24 @@ var GamePlayScene = function(game, stage)
 
     self.draw = function(canv)
     {
-      shaker.randomize();
-      if(mono.disabled) canv.context.fillStyle = "#BBBBBB";
-      else              canv.context.fillStyle = "#FFFFFF";
-      canv.context.fillRect(self.x+shaker.x, self.y+shaker.y-self.bump, self.w, self.h);
+      self.scenario.shaker.randomize();
+      if(self.monologue.disabled) canv.context.fillStyle = "#BBBBBB";
+      else                        canv.context.fillStyle = "#FFFFFF";
+      canv.context.fillRect(self.x+self.scenario.shaker.x, self.y+self.scenario.shaker.y-self.bump, self.w, self.h);
       self.mono_disp.draw(canv, self.bump);
       self.timer_disp.draw(canv, self.bump);
-      shaker.randomize();
+      self.scenario.shaker.randomize();
       canv.context.strokeStyle = "#000000";
       canv.context.lineWidth = 5;
-      canv.context.strokeRect(self.x+shaker.x, self.y+shaker.y-self.bump, self.w, self.h);
+      canv.context.strokeRect(self.x+self.scenario.shaker.x, self.y+self.scenario.shaker.y-self.bump, self.w, self.h);
     }
   }
 
-  var Shaker = function()
+  var Shaker = function(scen)
   {
     var self = this;
 
+    self.scenario = scen;
     self.shake = 0;
 
     self.x = 0;
@@ -341,9 +350,11 @@ var GamePlayScene = function(game, stage)
     }
   }
 
-  var Villain = function()
+  var Villain = function(scen)
   {
     var self = this;
+
+    self.scenario = scen;
 
     self.x = 700;
     self.y = 300;
@@ -359,15 +370,15 @@ var GamePlayScene = function(game, stage)
 
     self.draw = function(canv)
     {
-      shaker.randomize();
+      self.scenario.shaker.randomize();
       canv.context.fillStyle = "#000000";
-      var x = shaker.x;
-      var y = shaker.y;
-      shaker.randomize();
-      shaker.x*=20;
-      shaker.y*=20;
-      canv.context.fillRect(self.x+x-(shaker.x/2),self.y-self.anim+y-(shaker.y/2),self.w+shaker.x,self.h+self.anim+shaker.y);
-      shaker.randomize();
+      var x = self.scenario.shaker.x;
+      var y = self.scenario.shaker.y;
+      self.scenario.shaker.randomize();
+      self.scenario.shaker.x*=20;
+      self.scenario.shaker.y*=20;
+      canv.context.fillRect(self.x+x-(self.scenario.shaker.x/2),self.y-self.anim+y-(self.scenario.shaker.y/2),self.w+self.scenario.shaker.x,self.h+self.anim+self.scenario.shaker.y);
+      self.scenario.shaker.randomize();
     }
 
     self.tick = function()
@@ -376,9 +387,11 @@ var GamePlayScene = function(game, stage)
     }
   }
 
-  var Hero = function()
+  var Hero = function(scen)
   {
     var self = this;
+
+    self.scenario = scen;
 
     self.x = 220;
     self.y = 500;
@@ -398,28 +411,72 @@ var GamePlayScene = function(game, stage)
       self.s.randomize();
 
       self.s.randomize();
-      shaker.randomize();
+      self.scenario.shaker.randomize();
       canv.context.fillStyle = "#FFFFFF";
-      var x = shaker.x;
-      var y = shaker.y;
-      shaker.randomize();
-      shaker.x*=20;
-      shaker.y*=20;
-      canv.context.fillRect(self.x+x-(shaker.x/2)+self.s.x,self.y+y-(shaker.y/2)+self.s.y,self.w+shaker.x,self.h+shaker.y);
+      var x = self.scenario.shaker.x;
+      var y = self.scenario.shaker.y;
+      self.scenario.shaker.randomize();
+      self.scenario.shaker.x*=20;
+      self.scenario.shaker.y*=20;
+      canv.context.fillRect(self.x+x-(self.scenario.shaker.x/2)+self.s.x,self.y+y-(self.scenario.shaker.y/2)+self.s.y,self.w+self.scenario.shaker.x,self.h+self.scenario.shaker.y);
 
       self.s.randomize();
-      shaker.randomize();
+      self.scenario.shaker.randomize();
       canv.context.strokeStyle = "#000000";
-      var x = shaker.x;
-      var y = shaker.y;
-      shaker.randomize();
-      shaker.x*=20;
-      shaker.y*=20;
-      canv.context.strokeRect(self.x+x-(shaker.x/2)+self.s.x,self.y+y-(shaker.y/2)+self.s.y,self.w+shaker.x,self.h+shaker.y);
+      var x = self.scenario.shaker.x;
+      var y = self.scenario.shaker.y;
+      self.scenario.shaker.randomize();
+      self.scenario.shaker.x*=20;
+      self.scenario.shaker.y*=20;
+      canv.context.strokeRect(self.x+x-(self.scenario.shaker.x/2)+self.s.x,self.y+y-(self.scenario.shaker.y/2)+self.s.y,self.w+self.scenario.shaker.x,self.h+self.scenario.shaker.y);
 
-      shaker.randomize();
+      self.scenario.shaker.randomize();
     }
   }
+
+  var Scenario = function()
+  {
+    var self = this;
+
+    self.mono = new Monologue(self,tgen.getMonologue());
+    self.mono_full_disp = new MonologueFullDisplay(self,self.mono);
+    self.timer = new Timer(self);
+    self.bubb = new BubbleDisplay(self,self.mono,self.timer);
+    self.shaker = new Shaker(self);
+    self.villain = new Villain(self);
+    self.hero = new Hero(self);
+
+    self.begin = function()
+    {
+      keyer.register(self.mono);
+      ticker.register(self.mono);
+      drawer.register(self.mono_full_disp);
+      drawer.register(self.bubb);
+      ticker.register(self.bubb);
+      ticker.register(self.timer);
+      ticker.register(self.shaker);
+      drawer.register(self.villain);
+      ticker.register(self.villain);
+      drawer.register(self.hero);
+    }
+
+    self.end = function()
+    {
+      keyer.unregister(self.mono);
+      ticker.unregister(self.mono);
+      drawer.unregister(self.mono_full_disp);
+      drawer.unregister(self.bubb);
+      ticker.unregister(self.bubb);
+      ticker.unregister(self.timer);
+      ticker.unregister(self.shaker);
+      drawer.unregister(self.villain);
+      ticker.unregister(self.villain);
+      drawer.unregister(self.hero);
+    }
+  }
+
+  var scenarios;
+  var cur_scen;
 
   var mono;
   var mono_full_disp;
@@ -449,24 +506,12 @@ var GamePlayScene = function(game, stage)
     cough_audio = new Aud("assets/cough.ogg", false);
     cough_audio.load();
 
-    mono = new Monologue(tgen.getMonologue());
-    mono_full_disp = new MonologueFullDisplay(mono);
-    timer = new Timer();
-    bubb = new BubbleDisplay(mono,timer);
-    shaker = new Shaker();
-    villain = new Villain();
-    hero = new Hero();
+    scenarios = [];
+    var main = new Scenario();
+    scenarios.push(main);
 
-    keyer.register(mono);
-    ticker.register(mono);
-    drawer.register(mono_full_disp);
-    drawer.register(bubb);
-    ticker.register(bubb);
-    ticker.register(timer);
-    ticker.register(shaker);
-    drawer.register(villain);
-    ticker.register(villain);
-    drawer.register(hero);
+    cur_scen = 0;
+    scenarios[cur_scen].begin();
   };
 
   self.tick = function()
@@ -477,7 +522,7 @@ var GamePlayScene = function(game, stage)
 
   self.draw = function()
   {
-    stage.drawCanv.context.drawImage(assetter.asset("bg.png"),0+shaker.x,0+shaker.y);
+    stage.drawCanv.context.drawImage(assetter.asset("bg.png"),0+scenarios[cur_scen].shaker.x,0+scenarios[cur_scen].shaker.y);
     drawer.flush();
   };
 
