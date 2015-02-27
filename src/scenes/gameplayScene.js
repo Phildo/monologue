@@ -64,6 +64,7 @@ var GamePlayScene = function(game, stage)
       if(k == self.text.substring(self.progress,self.progress+1).toLowerCase())
       {
         mermer_audio.play();
+        villain.talk();
         self.progress++;
       }
       else shaker.shake = 10;
@@ -83,6 +84,7 @@ var GamePlayScene = function(game, stage)
 
     self.draw = function(canv)
     {
+      shaker.randomize();
       canv.context.font=SmallFont;
 
       //Red prompt
@@ -138,20 +140,25 @@ var GamePlayScene = function(game, stage)
       canv.context.font=BigFont;
 
       var lineOn = 0;
+      var lines = 3;
       for(var i = 0; i < self.lines.length; i++)
       {
         if(i != 0 && self.monologue.progress > self.lineCounts[i-1])
           lineOn = i;
       }
 
+      if(lineOn > 0) lineOn--;
+
       //Gray background
+      shaker.randomize();
       canv.context.fillStyle="#999999";
-      for(var i = lineOn; i < lineOn+2 && i <self.lines.length; i++)
+      for(var i = lineOn; i < lineOn+lines && i <self.lines.length; i++)
         canv.context.fillText(self.lines[i],self.x+shaker.x,self.y+(BigFontPx*(i-lineOn))+shaker.y);
 
       //Red prompt
+      shaker.randomize();
       canv.context.fillStyle="#FF0000";
-      for(var i = lineOn; i < lineOn+2 && i <self.lines.length; i++)
+      for(var i = lineOn; i < lineOn+lines && i <self.lines.length; i++)
       {
         if(self.monologue.progress >= self.lineCounts[i])
           canv.context.fillText(self.lines[i],self.x+shaker.x,self.y+(BigFontPx*(i-lineOn))+shaker.y);
@@ -168,8 +175,9 @@ var GamePlayScene = function(game, stage)
       }
 
       //Black completed
+      shaker.randomize();
       canv.context.fillStyle="#000000";
-      for(var i = lineOn; i < lineOn+2 && i <self.lines.length; i++)
+      for(var i = lineOn; i < lineOn+lines && i <self.lines.length; i++)
       {
         if(self.monologue.progress >= self.lineCounts[i])
           canv.context.fillText(self.lines[i],self.x+shaker.x,self.y+(BigFontPx*(i-lineOn))+shaker.y);
@@ -183,7 +191,6 @@ var GamePlayScene = function(game, stage)
       }
     }
   }
-
 
   var Timer = function()
   {
@@ -199,6 +206,7 @@ var GamePlayScene = function(game, stage)
 
     self.draw = function(canv)
     {
+      shaker.randomize();
       canv.context.strokeStyle = "#00FFFF";
       canv.context.lineWidth = 5;
       canv.context.beginPath();
@@ -231,8 +239,47 @@ var GamePlayScene = function(game, stage)
     self.tick = function()
     {
       if(self.shake > 0) self.shake -= 1;
+      self.randomize();
+    }
+    self.randomize = function()
+    {
       self.x = (Math.random()*self.shake*2)-self.shake;
       self.y = (Math.random()*self.shake*2)-self.shake;
+    }
+  }
+
+  var Villain = function()
+  {
+    var self = this;
+
+    self.x = 500;
+    self.y = 300;
+    self.w = 50;
+    self.h = 100;
+
+    self.anim = 0;
+
+    self.talk = function()
+    {
+      if(self.anim == 0) self.anim = 10;
+    }
+
+    self.draw = function(canv)
+    {
+      shaker.randomize();
+      canv.context.fillStyle = "#000000";
+      var x = shaker.x;
+      var y = shaker.y;
+      shaker.randomize();
+      shaker.x*=20;
+      shaker.y*=20;
+      canv.context.fillRect(self.x+x-(shaker.x/2),self.y-self.anim+y-(shaker.y/2),self.w+shaker.x,self.h+self.anim+shaker.y);
+      shaker.randomize();
+    }
+
+    self.tick = function()
+    {
+      if(self.anim > 0) self.anim--;
     }
   }
 
@@ -241,6 +288,7 @@ var GamePlayScene = function(game, stage)
   var mono_bubb_disp;
   var timer;
   var shaker;
+  var villain;
 
   self.ready = function()
   {
@@ -252,7 +300,7 @@ var GamePlayScene = function(game, stage)
     tgen = new TextGen();
     bg_audio = new Aud("assets/AllTiedUp.ogg", true);
     bg_audio.load();
-    //bg_audio.play();
+    bg_audio.play();
     mermer_audio = new Aud("assets/merrmerr.m4a", false);
     mermer_audio.load();
 
@@ -261,6 +309,7 @@ var GamePlayScene = function(game, stage)
     mono_bubb_disp = new MonologueBubbleDisplay(mono);
     timer = new Timer();
     shaker = new Shaker();
+    villain = new Villain();
 
     keyer.register(mono);
     drawer.register(mono_full_disp);
@@ -268,6 +317,8 @@ var GamePlayScene = function(game, stage)
     drawer.register(timer);
     ticker.register(timer);
     ticker.register(shaker);
+    drawer.register(villain);
+    ticker.register(villain);
   };
 
   self.tick = function()
