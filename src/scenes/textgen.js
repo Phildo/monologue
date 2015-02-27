@@ -48,8 +48,8 @@ var TextGen = function()
     var WW_NAME_HERO = //Can create a creator for these names as well...
     [
       "Sheriff of Easton",
-      "Westwood Sheriff",
-      "Amarillo Deputy Riccardo",
+      "Sheriff of Westwood",
+      "Deputy Riccardo of Amarillo",
       "Vigilante of El Paso"
     ];
 
@@ -154,7 +154,7 @@ var TextGen = function()
 
     var WW_CHICKEN_GIZZARDS =
     [
-      "chicken gizzards",
+      "person gizzards",
       "human giblets",
       "man pieces"
     ];
@@ -169,15 +169,65 @@ var TextGen = function()
       "town"
     ];
 
+    var WW_LISTEN_UP = 
+    [
+      "listen up",
+      "pay attention",
+      "take heed"
+    ];
+
+    var WW_YELLOW_BELLY = 
+    [
+      "yellow belly",
+      "city slicker",
+      "law abiding scum"
+    ];
+
+    var WW_ROAM_PAST = 
+    [
+      "roamed",
+      "patrolled",
+      "strolled"
+    ];
+
+    var WW_NONSPECIFIC_PLACES_PLURAL = 
+    [
+      "streets",
+      "parts",
+      "lands"
+    ];
+
+    var WW_RIVER = 
+    [
+      "Mississippi",
+      "Colorado",
+      "Rockies",
+      "Rio Grande"
+    ];
+
+
   self.getMonologue = function()
   {
 
 
+    var r = Math.floor(Math.random() * 3) // 3 = Phrases
 
 
+    if (r == 0)
+    {
+      return getWWP1();
+    }
+    else if (r == 1)
+    {
+      return getWWP2();
+    }
+    else if (r == 2) //make into an else? fuckitshipit
+    {
+      return getWWP3();
+    }
     //return randomshit[Math.floor(Math.random()*randomshit.length)];
    
-
+    //return getWWP3();
     return getWWP2();
     //return getWWP1();
 }
@@ -259,18 +309,56 @@ var TextGen = function()
 
   }
 
+  var getWWP3 = function()
+  {
+    //"Alright listen up you yellow belly. You've roamed these streets for too long Sherrif. After my group robs your store and robs your store, the whole country"
+    //" will be aware of the most crazy bandit this side of the mis river. The names WW_NAME_VILLAIN. Farewell."
+    //regex of
+    //"Alright WW_LISTEN_UP you WW_YELLOW_BELLY. You've WW_ROAM_PAST these WW_NONSPECIFIC_PLACES_PLURAL for too long WW_NAME_HERO. After my WW_GROUP WW_VERB_RANSACK(remove) your WW_ESTABLISHMENT(remove)"
+    //" and WW_VERB_RANSACK the WW_ESTABLISHMENT, the whole darn WW_PLACE will be aware of the most WW_ADJ_VILLAIN WW_BANDIT_SYNONYM this side of the WW_RIVER. The name is WW_NAME_VILLAIN. Don't forget it."
+
+    return (
+      "Alright " + 
+      rE(WW_LISTEN_UP) + 
+      " you " + 
+      rE(WW_YELLOW_BELLY) + ", " + 
+      rE(WW_NAME_HERO) + 
+      "! You've " + 
+      rE(WW_ROAM_PAST) + 
+      " these " + 
+      rE(WW_NONSPECIFIC_PLACES_PLURAL) + 
+      " for too long. After my " + 
+      rE(WW_GROUP) + " " +
+      " and I " + 
+      removeAndReturnE(WW_VERB_RANSACK) + " " +
+      " your " + 
+      removeAndReturnE(WW_ESTABLISHMENT) + " " +
+      " and " + 
+      rE(WW_VERB_RANSACK) + 
+      " the " + 
+      rE(WW_ESTABLISHMENT) + 
+      ", the whole darn " + 
+      rE(WW_PLACE) + 
+      " will be aware of the most " + 
+      rE(WW_ADJ_VILLAIN) + " " +
+      // " I have " + 
+      rE(WW_BANDIT_SYNONYM) + 
+      " this side of the " + 
+      rE(WW_RIVER) + 
+      ". The name is " + 
+      rE(WW_NAME_VILLAIN) + 
+      ". Don't forget it." 
+      );
+  }
 
 }
 
 
 //test shite
-var a = new TextGen(); //
-document.write(a.getMonologue());
-
-
+//var a = new TextGen(); //
+//document.write(a.getMonologue());
 
 //Make a few templates, randomly populate them with context relevant phrases.
-
 
 
 
@@ -289,3 +377,8 @@ document.write(a.getMonologue());
 
 
 
+
+
+//failure getMonologue
+//msuccess - wow i didn't think it'd actuallyhappen
+//intro screen 

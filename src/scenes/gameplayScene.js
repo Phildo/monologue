@@ -583,10 +583,10 @@ var GamePlayScene = function(game, stage)
       }
       else if(self.mode == 1)
       {
-        if(self.mode1tweenhack < 220)
+        if(self.mode1tweenhack < 110)
         {
           self.mode1tweenhack++;
-          self.hero.x -= 2;
+          self.hero.x -= 4;
         }
         else
         {
