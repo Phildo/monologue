@@ -77,6 +77,7 @@ var GamePlayScene = function(game, stage)
       }
       else if(k == self.text.substring(self.progress,self.progress+1).toLowerCase())
       {
+        self.scenario.timer.start();
         self.scenario.bubb.bumpit();
         mermer_audio[Math.floor(Math.random()*mermer_audio.length)].play();
         self.scenario.villain.talk();
@@ -232,9 +233,15 @@ var GamePlayScene = function(game, stage)
     self.t = 0;
     self.total = 1000;
 
+    self.started = false;
+
+    self.start = function()
+    {
+      self.started = true;
+    }
     self.tick = function()
     {
-      if(self.t < self.total) self.t++;
+      if(self.started && self.t < self.total) self.t++;
     }
   }
 
@@ -403,7 +410,7 @@ var GamePlayScene = function(game, stage)
 
     self.draw = function(canv)
     {
-      self.s.shake = 10;
+      self.s.shake = 5;
       self.s.randomize();
       self.s.shake = self.s.x;
       self.s.randomize();
@@ -434,7 +441,7 @@ var GamePlayScene = function(game, stage)
     }
   }
 
-  var Scenario = function()
+  var Scenario1 = function()
   {
     var self = this;
 
@@ -494,14 +501,92 @@ var GamePlayScene = function(game, stage)
       }
       else if(self.mode == 1)
       {
-        if(self.mode1tweenhack < 200)
+        if(self.mode1tweenhack < 220)
         {
           self.mode1tweenhack++;
           self.hero.x -= 2;
         }
+        else
+        {
+          scene.goToScenario(1);
+        }
       }
     }
   }
+
+  var Scenario2 = function()
+  {
+    var self = this;
+
+    self.mono = new Monologue(self,tgen.getMonologue());
+    self.mono_full_disp = new MonologueFullDisplay(self,self.mono);
+    self.timer = new Timer(self);
+    self.bubb = new BubbleDisplay(self,self.mono,self.timer);
+    self.shaker = new Shaker(self);
+    self.villain = new Villain(self);
+    self.hero = new Hero(self);
+
+    self.begin = function()
+    {
+      keyer.register(self.mono);
+      ticker.register(self.mono);
+      drawer.register(self.mono_full_disp);
+      drawer.register(self.bubb);
+      ticker.register(self.bubb);
+      ticker.register(self.timer);
+      ticker.register(self.shaker);
+      drawer.register(self.villain);
+      ticker.register(self.villain);
+      drawer.register(self.hero);
+    }
+
+    self.end = function()
+    {
+      keyer.unregister(self.mono);
+      ticker.unregister(self.mono);
+      drawer.unregister(self.mono_full_disp);
+      drawer.unregister(self.bubb);
+      ticker.unregister(self.bubb);
+      ticker.unregister(self.timer);
+      ticker.unregister(self.shaker);
+      drawer.unregister(self.villain);
+      ticker.unregister(self.villain);
+      drawer.unregister(self.hero);
+    }
+
+    self.mode = 0;
+    self.mode1tweenhack = 0;
+    // 0 = play
+    // 1 = escape
+    self.tick = function()
+    {
+      if(self.mode == 0)
+      {
+        if(self.timer.t == self.timer.total)
+        {
+          keyer.unregister(self.mono);
+          ticker.unregister(self.mono);
+          ticker.unregister(self.bubb);
+          drawer.unregister(self.bubb);
+          ticker.unregister(self.timer);
+          self.mode = 1;
+        }
+      }
+      else if(self.mode == 1)
+      {
+        if(self.mode1tweenhack < 220)
+        {
+          self.mode1tweenhack++;
+          self.hero.x -= 2;
+        }
+        else
+        {
+          scene.goToScenario(1);
+        }
+      }
+    }
+  }
+
 
   var scenarios;
   var cur_scen;
@@ -535,8 +620,10 @@ var GamePlayScene = function(game, stage)
     cough_audio.load();
 
     scenarios = [];
-    var main = new Scenario();
+    var main = new Scenario1();
     scenarios.push(main);
+    var ohno = new Scenario2();
+    scenarios.push(ohno);
 
     cur_scen = 0;
     scenarios[cur_scen].begin();
