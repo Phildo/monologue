@@ -529,6 +529,7 @@ var GamePlayScene = function(game, stage)
     self.mode1tweenhack = 0;
     // 0 = play
     // 1 = escape
+    // 2 = victory
     self.tick = function()
     {
       if(self.mode == 0)
@@ -542,6 +543,10 @@ var GamePlayScene = function(game, stage)
           ticker.unregister(self.timer);
           self.mode = 1;
         }
+        else if(self.mono.progress == self.mono.text.length)
+        {
+          self.mode = 2;
+        }
       }
       else if(self.mode == 1)
       {
@@ -554,6 +559,10 @@ var GamePlayScene = function(game, stage)
         {
           scene.goToScenario(1);
         }
+      }
+      else if(self.mode == 2)
+      {
+
       }
     }
   }
