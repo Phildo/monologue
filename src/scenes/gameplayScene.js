@@ -265,8 +265,9 @@ var GamePlayScene = function(game, stage)
 
     self.draw = function(canv)
     {
+      shaker.randomize();
       canv.context.fillStyle = "#FFFFFF";
-      canv.context.fillRect(self.x, self.y, self.w, self.h);
+      canv.context.fillRect(self.x+shaker.x, self.y+shaker.y, self.w, self.h);
       self.mono_disp.draw(canv);
       self.timer_disp.draw(canv);
     }
