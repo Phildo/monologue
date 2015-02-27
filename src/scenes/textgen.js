@@ -208,6 +208,7 @@ var TextGen = function()
 
   self.getMonologue = function()
   {
+    return "this is a test"
 
 
     var r = Math.floor(Math.random() * 3) // 3 = Phrases

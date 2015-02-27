@@ -515,21 +515,50 @@ var GamePlayScene = function(game, stage)
     }
   }
 
+  var Fade = function(scene)
+  {
+    var self = this;
+
+    self.t = 0;
+
+    self.draw = function(canv)
+    {
+      if(self.t != 0)
+      {
+        canv.context.fillStyle = "rgba(0,0,0,"+self.t+")";
+        canv.context.fillRect(0,0,canv.canvas.width,canv.canvas.height);
+      }
+    }
+  }
+
   var Scenario1 = function()
   {
     var self = this;
 
-    self.mono = new Monologue(self,tgen.getMonologue());
-    self.mono_full_disp = new MonologueFullDisplay(self,self.mono);
-    self.timer = new Timer(self);
-    self.bubb = new BubbleDisplay(self,self.mono,self.timer);
-    self.shaker = new Shaker(self);
-    self.villain = new Villain(self);
-    self.hero = new Hero(self);
-    self.train = new Train(self,self.mono);
+    self.mono;
+    self.mono_full_disp;
+    self.timer;
+    self.bubb;
+    self.shaker;
+    self.train;
+    self.villain;
+    self.hero;
+    self.mode;
+    self.mode1tweenhack;
 
     self.begin = function()
     {
+      self.mono = new Monologue(self,tgen.getMonologue());
+      self.mono_full_disp = new MonologueFullDisplay(self,self.mono);
+      self.timer = new Timer(self);
+      self.bubb = new BubbleDisplay(self,self.mono,self.timer);
+      self.shaker = new Shaker(self);
+      self.train = new Train(self,self.mono);
+      self.villain = new Villain(self);
+      self.hero = new Hero(self);
+      self.mode = 0;
+      self.mode1tweenhack = 0;
+
       keyer.register(self.mono);
       ticker.register(self.mono);
       drawer.register(self.mono_full_disp);
@@ -538,9 +567,9 @@ var GamePlayScene = function(game, stage)
       ticker.register(self.timer);
       ticker.register(self.shaker);
       drawer.register(self.villain);
+      drawer.register(self.train);
       ticker.register(self.villain);
       drawer.register(self.hero);
-      drawer.register(self.train);
     }
 
     self.end = function()
@@ -552,14 +581,12 @@ var GamePlayScene = function(game, stage)
       ticker.unregister(self.bubb);
       ticker.unregister(self.timer);
       ticker.unregister(self.shaker);
+      drawer.unregister(self.train);
       drawer.unregister(self.villain);
       ticker.unregister(self.villain);
       drawer.unregister(self.hero);
-      drawer.unregister(self.train);
     }
 
-    self.mode = 0;
-    self.mode1tweenhack = 0;
     // 0 = play
     // 1 = escape
     // 2 = victory
@@ -604,14 +631,26 @@ var GamePlayScene = function(game, stage)
   {
     var self = this;
 
-    self.mono = new Monologue(self,tgen.getMonologue());
-    self.mono_full_disp = new MonologueFullDisplay(self,self.mono);
-    self.bubb = new TimelessBubbleDisplay(self,self.mono);
-    self.shaker = new Shaker(self);
-    self.villain = new Villain(self);
+    self.mono;
+    self.mono_full_disp;
+    self.bubb;
+    self.shaker;
+    self.villain;
+    self.fade;
+    self.mode;
+    self.mode1tweenhack;
 
     self.begin = function()
     {
+      self.mono = new Monologue(self,tgen.getMonologue());
+      self.mono_full_disp = new MonologueFullDisplay(self,self.mono);
+      self.bubb = new TimelessBubbleDisplay(self,self.mono);
+      self.shaker = new Shaker(self);
+      self.villain = new Villain(self);
+      self.fade = new Fade(self);
+      self.mode = 0;
+      self.mode1tweenhack = 0;
+
       keyer.register(self.mono);
       ticker.register(self.mono);
       drawer.register(self.mono_full_disp);
@@ -620,6 +659,7 @@ var GamePlayScene = function(game, stage)
       ticker.register(self.shaker);
       drawer.register(self.villain);
       ticker.register(self.villain);
+      drawer.register(self.fade);
     }
 
     self.end = function()
@@ -632,21 +672,37 @@ var GamePlayScene = function(game, stage)
       ticker.unregister(self.shaker);
       drawer.unregister(self.villain);
       ticker.unregister(self.villain);
+      drawer.unregister(self.fade);
     }
 
+    //0 = lamenting
+    //1 = fadeout
     self.tick = function()
     {
-    /*
-      if(self.timer.t == self.timer.total)
+      if(self.mode == 0)
       {
-        keyer.unregister(self.mono);
-        ticker.unregister(self.mono);
-        ticker.unregister(self.bubb);
-        drawer.unregister(self.bubb);
-        ticker.unregister(self.timer);
-        scene.goToScenario(1);
+        if(self.mono.progress == self.mono.text.length)
+        {
+          keyer.unregister(self.mono);
+          self.mode = 1;
+        }
       }
-    */
+      else if(self.mode == 1)
+      {
+        var tweenlen = 110;
+        if(self.mode1tweenhack < tweenlen)
+        {
+          self.mode1tweenhack++;
+          if(self.mode1tweenhack > 20)
+          {
+            self.fade.t = ((self.mode1tweenhack-20)/(tweenlen-20));
+          }
+          if(self.mode1tweenhack >= tweenlen)
+          {
+            scene.goToScenario(0);
+          }
+        }
+      }
     }
   }
 

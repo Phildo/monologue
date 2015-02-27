@@ -14,15 +14,18 @@ var Keyer = function(init)
   self.register = function(keyable) { keyables.push(keyable); }
   self.unregister = function(keyable) { var i = keyables.indexOf(keyable); if(i != -1) keyables.splice(i,1); }
   self.clear = function() { keyables = []; }
+  function preventFault(evt) { evt.preventDefault(); return false; };
   self.attach = function() //will get auto-called at creation
   {
-    //self.source.addEventListener('keypress', key, false);
     document.addEventListener('keypress', key, false);
+    //document.addEventListener('keydown', preventFault, false);
+    document.addEventListener('keyup', preventFault, false);
   }
   self.detach = function()
   {
-    //self.source.removeEventListener('keypress', key);
     document.removeEventListener('keypress', key);
+    //document.removeEventListener('keydown', preventFault);
+    document.removeEventListener('keyup', preventFault);
   }
 
   function key(evt)
@@ -39,6 +42,7 @@ var Keyer = function(init)
       }
     }
     evt.preventDefault();
+    return false;
   }
   self.flush = function()
   {
