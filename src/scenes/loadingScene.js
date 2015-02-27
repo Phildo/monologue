@@ -21,6 +21,7 @@ var LoadingScene = function(game, stage)
     barw = (canv.canvas.width-(2*pad));
     progress = 0;
     canv.context.fillStyle = "#000000";
+    canv.context.font = "1px vg_font";
     canv.context.fillText(".",0,0);// funky way to encourage any custom font to load
 
     //put strings in 'img_srcs' as separate array to get "static" count

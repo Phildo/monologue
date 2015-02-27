@@ -3,9 +3,9 @@ var GamePlayScene = function(game, stage)
   var self = this;
 
   var BigFontPx = 20;
-  var BigFont = BigFontPx+"px Courrier";
+  var BigFont = BigFontPx+"px vg_font";
   var SmallFontPx = 10;
-  var SmallFont = SmallFontPx+"px Courrier";
+  var SmallFont = SmallFontPx+"px vg_font";
 
   var assetter;
   var dbugger; //'debugger' is a keyword... (why.)
