@@ -22,6 +22,7 @@ var GamePlayScene = function(game, stage)
     var self = this;
     self.text = str;
     self.progress = 0;
+    self.disabled = 0;
 
     self.splitTextIntoLines = function(font, width)
     {
@@ -67,7 +68,11 @@ var GamePlayScene = function(game, stage)
 
     self.key = function(k)
     {
-      if(k == self.text.substring(self.progress,self.progress+1).toLowerCase())
+      if(self.disabled)
+      {
+        bubb.bumpit();
+      }
+      else if(k == self.text.substring(self.progress,self.progress+1).toLowerCase())
       {
         bubb.bumpit();
         mermer_audio[Math.floor(Math.random()*mermer_audio.length)].play();
@@ -78,8 +83,14 @@ var GamePlayScene = function(game, stage)
       {
         cough_audio.play();
         shaker.shake = 10;
+        self.disabled = 50;
         self.revokeProgress();
       }
+    }
+
+    self.tick = function()
+    {
+      if(self.disabled > 0) self.disabled--;
     }
   }
 
@@ -100,7 +111,8 @@ var GamePlayScene = function(game, stage)
       canv.context.font=SmallFont;
 
       //Red prompt
-      canv.context.fillStyle="#FF0000";
+      if(self.monologue.disabled) canv.context.fillStyle="#AA0000";
+      else                        canv.context.fillStyle="#FF0000";
       for(var i = 0; i < self.lines.length; i++)
       {
         if(self.monologue.progress >= self.lineCounts[i])
@@ -118,7 +130,8 @@ var GamePlayScene = function(game, stage)
       }
 
       //Black completed
-      canv.context.fillStyle="#000000";
+      if(self.monologue.disabled) canv.context.fillStyle="#444444";
+      else                        canv.context.fillStyle="#000000";
       for(var i = 0; i < self.lines.length; i++)
       {
         if(self.monologue.progress >= self.lineCounts[i])
@@ -169,7 +182,8 @@ var GamePlayScene = function(game, stage)
 
       //Red prompt
       shaker.randomize();
-      canv.context.fillStyle="#FF0000";
+      if(self.monologue.disabled) canv.context.fillStyle="#AA0000";
+      else                        canv.context.fillStyle="#FF0000";
       for(var i = lineOn; i < lineOn+lines && i <self.lines.length; i++)
       {
         if(self.monologue.progress >= self.lineCounts[i])
@@ -188,7 +202,8 @@ var GamePlayScene = function(game, stage)
 
       //Black completed
       shaker.randomize();
-      canv.context.fillStyle="#000000";
+      if(self.monologue.disabled) canv.context.fillStyle="#444444";
+      else                        canv.context.fillStyle="#000000";
       for(var i = lineOn; i < lineOn+lines && i <self.lines.length; i++)
       {
         if(self.monologue.progress >= self.lineCounts[i])
@@ -288,7 +303,8 @@ var GamePlayScene = function(game, stage)
     self.draw = function(canv)
     {
       shaker.randomize();
-      canv.context.fillStyle = "#FFFFFF";
+      if(mono.disabled) canv.context.fillStyle = "#BBBBBB";
+      else              canv.context.fillStyle = "#FFFFFF";
       canv.context.fillRect(self.x+shaker.x, self.y+shaker.y-self.bump, self.w, self.h);
       self.mono_disp.draw(canv, self.bump);
       self.timer_disp.draw(canv, self.bump);
@@ -435,6 +451,7 @@ var GamePlayScene = function(game, stage)
     hero = new Hero();
 
     keyer.register(mono);
+    ticker.register(mono);
     drawer.register(mono_full_disp);
     drawer.register(bubb);
     ticker.register(bubb);
