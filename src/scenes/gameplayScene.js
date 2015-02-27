@@ -270,6 +270,10 @@ var GamePlayScene = function(game, stage)
       canv.context.fillRect(self.x+shaker.x, self.y+shaker.y, self.w, self.h);
       self.mono_disp.draw(canv);
       self.timer_disp.draw(canv);
+      shaker.randomize();
+      canv.context.strokeStyle = "#000000";
+      canv.context.lineWidth = 5;
+      canv.context.strokeRect(self.x+shaker.x, self.y+shaker.y, self.w, self.h);
     }
   }
 
