@@ -23,7 +23,6 @@ var GamePlayScene = function(game, stage)
 
     self.splitTextIntoLines = function(font, width)
     {
-      console.log(width);
       var lines = [];
       var found = 0;
       var searched = 0;

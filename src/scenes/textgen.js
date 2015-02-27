@@ -177,11 +177,4 @@ var TextGen = function()
   }
 }
 
-
-//test shite
-var a = new TextGen(); //
-document.write(a.getMonologue());
-
-
-
 //Make a few templates, randomly populate them with context relevant phrases.
