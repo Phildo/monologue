@@ -26,7 +26,6 @@ var GamePlayScene = function(game, stage)
       var tentative_search = 0;
 
       stage.drawCanv.context.font=font;
-      console.log(stage.drawCanv.context.measureText(self.text).width);
       while(found < str.length)
       {
         searched = str.indexOf(" ",found);
@@ -44,7 +43,19 @@ var GamePlayScene = function(game, stage)
 
       return lines;
     }
+    self.getCountsForLines = function(lines)
+    {
+      var counts = [];
+      for(var i = 0; i < lines.length; i++)
+      {
+        if(i == 0) counts[i] = lines[i].length;
+        else       counts[i] = lines[i].length+counts[i-1];
+      }
+      return counts;
+    }
+
     self.fullWidthLines = self.splitTextIntoLines(self.text,BigFont,500);
+    self.fullWidthLineCounts = self.getCountsForLines(self.fullWidthLines);
 
     self.key = function(k)
     {
@@ -63,16 +74,45 @@ var GamePlayScene = function(game, stage)
     self.monologue = mono;
     self.draw = function(canv)
     {
-      canv.context.font="30px Courrier";
+      canv.context.font=BigFont;
+
+      //Gray background
       canv.context.fillStyle="#999999";
-      canv.context.fillText(self.monologue.text,self.x,self.y);
+      for(var i = 0; i < self.monologue.fullWidthLines.length; i++)
+        canv.context.fillText(self.monologue.fullWidthLines[i],self.x,self.y+(30*i));
+
+      //Red prompt
       canv.context.fillStyle="#FF0000";
-      if(self.monologue.text.substring(self.monologue.progress,self.monologue.progress+1) == " ")
-        canv.context.fillText(self.monologue.text.substring(0,self.monologue.progress)+"_",self.x,self.y);
-      else
-        canv.context.fillText(self.monologue.text.substring(0,self.monologue.progress+1),self.x,self.y);
+      for(var i = 0; i < self.monologue.fullWidthLines.length; i++)
+      {
+        if(self.monologue.progress >= self.monologue.fullWidthLineCounts[i])
+          canv.context.fillText(self.monologue.fullWidthLines[i],self.x,self.y+(30*i));
+        else
+        {
+          var p;
+          if(i == 0) p = self.monologue.progress;
+          else       p = self.monologue.progress-self.monologue.fullWidthLineCounts[i-1];
+          if(self.monologue.fullWidthLines[i].substring(p,p+1) == " ")
+            canv.context.fillText(self.monologue.fullWidthLines[i].substring(0,p)+"_",self.x,self.y+(30*i));
+          else
+            canv.context.fillText(self.monologue.fullWidthLines[i].substring(0,p+1),self.x,self.y+(30*i));
+        }
+      }
+
+      //Black completed
       canv.context.fillStyle="#000000";
-      canv.context.fillText(self.monologue.text.substring(0,self.monologue.progress),self.x,self.y);
+      for(var i = 0; i < self.monologue.fullWidthLines.length; i++)
+      {
+        if(self.monologue.progress >= self.monologue.fullWidthLineCounts[i])
+          canv.context.fillText(self.monologue.fullWidthLines[i],self.x,self.y+(30*i));
+        else
+        {
+            var p;
+            if(i == 0) p = self.monologue.progress;
+            else p = self.monologue.progress-self.monologue.fullWidthLineCounts[i-1];
+            canv.context.fillText(self.monologue.fullWidthLines[i].substring(0,p),self.x,self.y+(30*i));
+        }
+      }
     }
   }
 
@@ -124,7 +164,6 @@ var GamePlayScene = function(game, stage)
     tgen = new TextGen();
 
     mono = new Monologue(tgen.getMonologue());
-    console.log(mono.fullWidthLines);
     mono_disp = new MonologueDisplay(mono);
     timer = new Timer();
 
