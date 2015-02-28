@@ -825,6 +825,7 @@ var GamePlayScene = function(game, stage)
         else if(self.mono.progress == self.mono.text.length)
         {
           keyer.unregister(self.mono);
+          ticker.unregister(self.hero);
           self.mode = 2;
         }
       }
