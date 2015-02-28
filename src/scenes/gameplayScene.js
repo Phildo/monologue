@@ -17,6 +17,7 @@ var GamePlayScene = function(game, stage)
   var bg_audio;
   var mermer_audio;
   var cough_audio;
+  var train_audio;
 
   var Monologue = function(scen, str)
   {
@@ -845,8 +846,6 @@ var GamePlayScene = function(game, stage)
     }
   }
 
-
-
   var scenarios;
   var cur_scen;
 
@@ -880,6 +879,8 @@ var GamePlayScene = function(game, stage)
       cough_audio.push(new Aud("assets/Coughing"+(i+1)+".ogg", false));
       cough_audio[i].load();
     }
+    train_audio = new Aud("assets/SteamWhistle.ogg",false);
+    train_audio.load();
 
     scenarios = [];
     var main = new Scenario1();
@@ -898,6 +899,8 @@ var GamePlayScene = function(game, stage)
   {
     keyer.flush();
     ticker.flush();
+
+    if(Math.floor(Math.random()*1000) == 0) train_audio.play();
   };
 
   self.draw = function()
