@@ -11,7 +11,7 @@ var Game = function(init)
   doMapInitDefaults(init,init,default_init);
 
   var stage = new Stage({width:init.width,height:init.height,container:init.container});
-  var scenes = [new NullScene(self, stage), new LoadingScene(self, stage), new GamePlayScene(self, stage)];
+  var scenes = [new NullScene(self, stage), new LoadingScene(self, stage), new StartScene(self, stage), new GamePlayScene(self, stage)];
   var currentScene = 0;
 
   self.begin = function()
@@ -33,7 +33,7 @@ var Game = function(init)
   {
     scenes[currentScene].cleanup();
     currentScene++;
-    if(currentScene >= scenes.length) currentScene = 1;
+    if(currentScene >= scenes.length) currentScene = 2;
     scenes[currentScene].ready();
   };
 };

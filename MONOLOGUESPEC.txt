@@ -61,20 +61,14 @@ Feature Creep:
 TODOs:
 
 NEEDS TO BE DONE:
-	Generate Babby Art Assets
 	Setup "start"/menu?
-	Game Logic
-		Win State
-		Lose State
-		Implement Incorrect Punishments
-	Villian Animation
-	Villian Speech Sound
-	Get legit art assets
-	Fix Back Button not fucking up game
-	Phrase: No he got away...
+	legit art
 
 WOULD LIKE:
+	Timer by char count
 	Spellcheck words
+	Hint text on start
+	audio loop while waiting for text to start...........
 	Generate more words
 	Generate more structures
 	Generate more levels
@@ -85,9 +79,12 @@ WOULD LIKE:
 	Win State -> Fade Out Animation
 	Lose State -> Animation
 	Multiplayer
+	Credits
+		vignette
+
+restart button
 
 FEATURE CREEP:
-	Credits
 
 NITPICK:
 	Music Loop "fix"

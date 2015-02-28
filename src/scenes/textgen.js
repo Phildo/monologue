@@ -237,7 +237,7 @@ var TextGen = function()
 
     var failureMonologue = 
     [
-      "Drats! I've been foiled again",
+      "Drats! I've been foiled again...",
       //"How in tarnations"
       "Dagnabbit! They got away again...",
       "I can't believe I let them escape!"
