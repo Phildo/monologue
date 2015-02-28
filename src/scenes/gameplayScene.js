@@ -11,6 +11,7 @@ var GamePlayScene = function(game, stage)
   var assetter;
   var dbugger; //'debugger' is a keyword... (why.)
   var drawer;
+  var particler;
   var ticker;
   var keyer;
   var tgen;
@@ -317,7 +318,7 @@ var GamePlayScene = function(game, stage)
   {
     var self = this;
 
-    self.x = 200;
+    self.x = 250;
     self.y = 200;
     self.w = 520;
     self.h = 115;
@@ -359,7 +360,7 @@ var GamePlayScene = function(game, stage)
   {
     var self = this;
 
-    self.x = 200;
+    self.x = 250;
     self.y = 200;
     self.w = 520;
     self.h = 115;
@@ -422,8 +423,8 @@ var GamePlayScene = function(game, stage)
 
     self.scenario = scen;
 
-    self.x = 700;
-    self.y = 250;
+    self.x = 600;
+    self.y = 300;
     self.w = 100;
     self.h = 300;
 
@@ -518,6 +519,39 @@ var GamePlayScene = function(game, stage)
     }
   }
 
+  var SmokePart = function(scen,x,y,s)
+  {
+    var self = this;
+
+    self.scenario = scen;
+    self.x = x;
+    self.y = y;
+    self.s = s;
+    self.t = 0;
+
+    self.draw = function(canv)
+    {
+      canv.context.fillStyle = "rgba(0,0,0,0.5)";
+      canv.context.beginPath();
+      canv.context.arc(
+      self.x+self.s/2+self.scenario.shaker.x,
+      self.y+self.s/2+self.scenario.shaker.y,
+      (self.s/2),
+      0,
+      2*Math.PI,
+      true);
+      canv.context.fill();
+    }
+
+    self.tick = function()
+    {
+      self.t++;
+      self.y -= self.s/5*Math.random();
+      self.x += self.s/5*((Math.random()*2)-1);
+      return self.t < 100;
+    }
+  }
+
   var Train = function(scen, mono)
   {
     var self = this;
@@ -591,6 +625,15 @@ var GamePlayScene = function(game, stage)
     }
     self.tick = function()
     {
+      if(Math.floor(Math.random()*5) == 0)
+      {
+        var t = self.monologue.progress/self.monologue.text.length;
+        t = t*t;
+        var x = lerp(self.start_x,self.end_x,t);
+        var y = lerp(self.start_y,self.end_y,t);
+        var w = lerp(self.start_w,self.end_w,t);
+        particler.register(new SmokePart(self.scenario,x+w/4,y,5+t*50));
+      }
       self.sin_seed+=0.2;
     }
   }
@@ -655,6 +698,8 @@ var GamePlayScene = function(game, stage)
       ticker.register(self.train);
       ticker.register(self.villain);
       drawer.register(self.hero);
+      drawer.register(particler);
+      ticker.register(particler);
       drawer.register(self.fade);
 
       bg_audio.play();
@@ -674,6 +719,9 @@ var GamePlayScene = function(game, stage)
       drawer.unregister(self.villain);
       ticker.unregister(self.villain);
       drawer.unregister(self.hero);
+      drawer.unregister(particler);
+      ticker.unregister(particler);
+      particler.clear();
       drawer.unregister(self.fade);
 
       bg_audio.stop();
@@ -762,6 +810,8 @@ var GamePlayScene = function(game, stage)
       ticker.register(self.shaker);
       drawer.register(self.villain);
       ticker.register(self.villain);
+      drawer.register(particler);
+      ticker.register(particler);
       drawer.register(self.fade);
 
       bg_audio.play();
@@ -777,6 +827,9 @@ var GamePlayScene = function(game, stage)
       ticker.unregister(self.shaker);
       drawer.unregister(self.villain);
       ticker.unregister(self.villain);
+      drawer.unregister(particler);
+      ticker.unregister(particler);
+      particler.clear();
       drawer.unregister(self.fade);
 
       bg_audio.stop();
@@ -843,6 +896,8 @@ var GamePlayScene = function(game, stage)
       ticker.register(self.shaker);
       drawer.register(self.villain);
       ticker.register(self.villain);
+      drawer.register(particler);
+      ticker.register(particler);
       drawer.register(self.fade);
 
       bg_audio.play();
@@ -858,6 +913,9 @@ var GamePlayScene = function(game, stage)
       ticker.unregister(self.shaker);
       drawer.unregister(self.villain);
       ticker.unregister(self.villain);
+      drawer.unregister(particler);
+      ticker.unregister(particler);
+      particler.clear();
       drawer.unregister(self.fade);
 
       bg_audio.stop();
@@ -912,8 +970,11 @@ var GamePlayScene = function(game, stage)
     dbugger = new Debugger({source:document.getElementById("debug_div")});
     ticker = new Ticker({});
     drawer = new Drawer({source:stage.drawCanv});
+    particler = new Particler({});
     keyer = new Keyer({source:stage.dispCanv.canvas});
+
     tgen = new TextGen();
+
     bg_audio = new Aud("assets/AllTiedUp.ogg", true);
     bg_audio.load();
     mermer_audio = [];
