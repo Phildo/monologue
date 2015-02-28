@@ -583,7 +583,6 @@ var GamePlayScene = function(game, stage)
       self.nstraps = Math.round((1-(self.scenario.timer.t/self.scenario.timer.total))*self.maxstraps);
       if(self.nstraps != self.lastknownnstraps)
       {
-        console.log('snappin');
         boing_audio[Math.floor(Math.random()*boing_audio.length)].play();
         self.samt = 20;
       }
