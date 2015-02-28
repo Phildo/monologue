@@ -61,30 +61,27 @@ Feature Creep:
 TODOs:
 
 NEEDS TO BE DONE:
-	Setup "start"/menu?
-	legit art
+	Timer by char count
+	New Sounds
 
 WOULD LIKE:
-	Timer by char count
 	Spellcheck words
-	Hint text on start
-	audio loop while waiting for text to start...........
 	Generate more words
 	Generate more structures
-	Generate more levels
-		Pirate
+
 	Background Animation (tumbleweed/cloud)
 	Hero Animation
-	Hero Speech Sounds
-	Win State -> Fade Out Animation
-	Lose State -> Animation
 	Multiplayer
+	Legit 8bit/low poly art.
 	Credits
-		vignette
 
-restart button
 
 FEATURE CREEP:
+	Generate more levels
+		Pirate
+	audio loop while waiting for text to start...........
+	vignette
+
 
 NITPICK:
 	Music Loop "fix"
