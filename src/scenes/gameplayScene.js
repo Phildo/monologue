@@ -284,7 +284,7 @@ var GamePlayScene = function(game, stage)
       //draw red
       self.scenario.shaker.randomize();
       canv.context.strokeStyle = "#FF0000";
-      canv.context.lineWidth = 10;
+      canv.context.lineWidth = 40;
       canv.context.beginPath();
       canv.context.arc(
       self.x+self.w/2+self.scenario.shaker.x+self.s.x,
@@ -297,8 +297,9 @@ var GamePlayScene = function(game, stage)
 
       //draw black
       self.scenario.shaker.randomize();
-      canv.context.strokeStyle = "#000000";
-      canv.context.lineWidth = 10;
+      if(Math.floor(self.t.t/30)%2) canv.context.strokeStyle = "#666666";
+      else                          canv.context.strokeStyle = "#000000";
+      canv.context.lineWidth = 40;
       canv.context.beginPath();
       canv.context.arc(
       self.x+self.w/2+self.scenario.shaker.x,
@@ -325,7 +326,7 @@ var GamePlayScene = function(game, stage)
     self.monologue = mono;
     self.timer = timer;
     self.mono_disp = new MonologueBubbleDisplay(self.scenario,self.monologue, self.x+(self.h), self.y+10, self.w-(self.h)-BigFontPx, self.h);
-    self.timer_disp = new TimerDisplay(self.scenario,self.timer, self.x+10, self.y+10, self.h-20, self.h-20);
+    self.timer_disp = new TimerDisplay(self.scenario,self.timer, self.x+20, self.y+20, self.h-40, self.h-40);
 
     self.bumpit = function()
     {
