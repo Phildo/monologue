@@ -655,6 +655,7 @@ var GamePlayScene = function(game, stage)
         if(self.modetweenhack < tweenlen)
         {
           self.modetweenhack++;
+          self.hero.y -= 20;
           self.hero.x -= 4;
         }
         else
@@ -836,6 +837,7 @@ var GamePlayScene = function(game, stage)
           }
           if(self.modetweenhack >= tweenlen)
           {
+            bg_audio.stop();
             game.nextScene();
           }
         }
