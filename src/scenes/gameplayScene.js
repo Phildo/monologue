@@ -106,6 +106,29 @@ var GamePlayScene = function(game, stage)
     }
   }
 
+  var TextFlyPart = function(c,sx,sy)
+  {
+    var self = this;
+
+    self.t = 0;
+    self.s = new Shaker();
+
+    self.draw = function(canv)
+    {
+      var t = (20-self.t)/20;
+      self.s.shake = t*20;
+      self.s.randomize();
+      canv.context.fillStyle = "#000000";//"rgba(0,0,0,"+t+")";
+      canv.context.font=SmallFont;
+      canv.context.fillText(c,sx+self.s.x,sy+self.s.y);
+    }
+
+    self.tick = function()
+    {
+      self.t++;
+      return self.t < 20;
+    }
+  }
   var MonologueFullDisplay = function(scen, mono)
   {
     var self = this;
@@ -118,35 +141,14 @@ var GamePlayScene = function(game, stage)
     self.lines = self.monologue.splitTextIntoLines(SmallFont,stage.drawCanv.canvas.width);
     self.lineCounts = self.monologue.getCountsForLines(self.lines);
 
+    self.lastknownprogress = 0;
+
     self.draw = function(canv)
     {
       self.scenario.shaker.randomize();
       canv.context.font=SmallFont;
 
-      //Red prompt
-      /*
-      if(self.monologue.disabled) canv.context.fillStyle="#AA0000";
-      else                        canv.context.fillStyle="#FF0000";
-      for(var i = 0; i < self.lines.length; i++)
-      {
-        if(self.monologue.progress >= self.lineCounts[i])
-          canv.context.fillText(self.lines[i],self.x+self.scenario.shaker.x,self.y+(SmallFontPx*i)+self.scenario.shaker.y);
-        else
-        {
-          var p;
-          if(i == 0) p = self.monologue.progress;
-          else       p = self.monologue.progress-self.lineCounts[i-1];
-          if(self.lines[i].substring(p,p+1) == " ")
-            canv.context.fillText(self.lines[i].substring(0,p)+"_",self.x+self.scenario.shaker.x,self.y+(SmallFontPx*i)+self.scenario.shaker.y);
-          else
-            canv.context.fillText(self.lines[i].substring(0,p+1),self.x+self.scenario.shaker.x,self.y+(SmallFontPx*i)+self.scenario.shaker.y);
-        }
-      }
-      */
-
-      //Black completed
-      if(self.monologue.disabled) canv.context.fillStyle="#444444";
-      else                        canv.context.fillStyle="#000000";
+      canv.context.fillStyle="#000000";
       for(var i = 0; i < self.lines.length; i++)
       {
         if(self.monologue.progress >= self.lineCounts[i])
@@ -159,6 +161,33 @@ var GamePlayScene = function(game, stage)
             canv.context.fillText(self.lines[i].substring(0,p),self.x+self.scenario.shaker.x,self.y+(SmallFontPx*i)+self.scenario.shaker.y);
         }
       }
+    }
+
+    self.tick = function()
+    {
+      if(self.lastknownprogress != self.monologue.progress)
+      {
+        var i = 0;
+        for(i = 0; i < self.lines.length && self.monologue.progress > self.lineCounts[i]; i++)
+          ;
+
+        var p;
+        if(i == 0) p = self.monologue.progress;
+        else p = self.monologue.progress-self.lineCounts[i-1];
+
+        stage.drawCanv.context.font=SmallFont;
+        var px = stage.drawCanv.context.measureText(self.lines[i].substring(0,p-1)).width+self.x+self.scenario.shaker.x;
+        var py = self.y+(SmallFontPx*i)+self.scenario.shaker.y;
+
+        particler.register(
+          new TextFlyPart(
+            self.monologue.text.substring(self.monologue.progress-1,self.monologue.progress),
+            px,
+            py
+          )
+        );
+      }
+      self.lastknownprogress = self.monologue.progress;
     }
   }
 
@@ -768,6 +797,7 @@ var GamePlayScene = function(game, stage)
       keyer.register(self.mono);
       ticker.register(self.mono);
       drawer.register(self.mono_full_disp);
+      ticker.register(self.mono_full_disp);
       drawer.register(self.bubb);
       ticker.register(self.bubb);
       ticker.register(self.timer);
@@ -790,6 +820,7 @@ var GamePlayScene = function(game, stage)
       keyer.unregister(self.mono);
       ticker.unregister(self.mono);
       drawer.unregister(self.mono_full_disp);
+      ticker.unregister(self.mono_full_disp);
       drawer.unregister(self.bubb);
       ticker.unregister(self.bubb);
       ticker.unregister(self.timer);
@@ -888,6 +919,7 @@ var GamePlayScene = function(game, stage)
       keyer.register(self.mono);
       ticker.register(self.mono);
       drawer.register(self.mono_full_disp);
+      ticker.register(self.mono_full_disp);
       drawer.register(self.bubb);
       ticker.register(self.bubb);
       ticker.register(self.shaker);
@@ -905,6 +937,7 @@ var GamePlayScene = function(game, stage)
       keyer.unregister(self.mono);
       ticker.unregister(self.mono);
       drawer.unregister(self.mono_full_disp);
+      ticker.unregister(self.mono_full_disp);
       drawer.unregister(self.bubb);
       ticker.unregister(self.bubb);
       ticker.unregister(self.shaker);
@@ -982,6 +1015,7 @@ var GamePlayScene = function(game, stage)
       keyer.register(self.mono);
       ticker.register(self.mono);
       drawer.register(self.mono_full_disp);
+      ticker.register(self.mono_full_disp);
       drawer.register(self.bubb);
       ticker.register(self.bubb);
       ticker.register(self.shaker);
@@ -999,6 +1033,7 @@ var GamePlayScene = function(game, stage)
       keyer.unregister(self.mono);
       ticker.unregister(self.mono);
       drawer.unregister(self.mono_full_disp);
+      ticker.unregister(self.mono_full_disp);
       drawer.unregister(self.bubb);
       ticker.unregister(self.bubb);
       ticker.unregister(self.shaker);
