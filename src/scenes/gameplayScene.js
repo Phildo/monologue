@@ -19,6 +19,7 @@ var GamePlayScene = function(game, stage)
   var mermer_audio;
   var cough_audio;
   var train_audio;
+  var boing_audio;
 
   var Monologue = function(scen, str)
   {
@@ -522,6 +523,11 @@ var GamePlayScene = function(game, stage)
     self.w = 220;
     self.h = 100;
 
+    self.orig_x = self.x;
+    self.orig_y = self.y;
+    self.orig_w = self.w;
+    self.orig_h = self.h;
+
     self.escaping = false;
     self.t = 0;
 
@@ -549,7 +555,10 @@ var GamePlayScene = function(game, stage)
     {
       if(self.escaping)
       {
+        if(self.t == 0) boing_audio.play();
         self.t++;
+        self.y = self.orig_y - Math.abs(Math.sin(self.t/10))*200;
+        self.x-=3;
       }
     }
   }
@@ -732,9 +741,10 @@ var GamePlayScene = function(game, stage)
       drawer.register(self.train);
       ticker.register(self.train);
       ticker.register(self.villain);
-      drawer.register(self.hero);
       drawer.register(particler);
       ticker.register(particler);
+      drawer.register(self.hero);
+      ticker.register(self.hero);
       drawer.register(self.fade);
 
       bg_audio.play();
@@ -754,6 +764,7 @@ var GamePlayScene = function(game, stage)
       drawer.unregister(self.villain);
       ticker.unregister(self.villain);
       drawer.unregister(self.hero);
+      ticker.unregister(self.hero);
       drawer.unregister(particler);
       ticker.unregister(particler);
       particler.clear();
@@ -784,12 +795,11 @@ var GamePlayScene = function(game, stage)
       }
       else if(self.mode == 1)
       {
-        var tweenlen = 110;
+        var tweenlen = 150;
         if(self.modetweenhack < tweenlen)
         {
           self.modetweenhack++;
-          self.hero.y -= 20;
-          self.hero.x -= 4;
+          self.hero.escaping = true;
         }
         else
         {
@@ -1030,6 +1040,8 @@ var GamePlayScene = function(game, stage)
     }
     train_audio = new Aud("assets/SteamWhistle.ogg",false);
     train_audio.load();
+    boing_audio = new Aud("assets/Jawharp1.ogg",false);
+    boing_audio.load();
 
     scenarios = [];
     var main = new Scenario1();
