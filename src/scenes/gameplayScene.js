@@ -1040,9 +1040,9 @@ var GamePlayScene = function(game, stage)
   self.draw = function()
   {
     var canv = stage.drawCanv;
-    canv.context.fillStyle = "#79F5FF";
+    canv.context.fillStyle = "#BBBBBB";
     canv.context.fillRect(0,0,canv.canvas.width,canv.canvas.height);
-    canv.context.fillStyle = "#FFF800";
+    canv.context.fillStyle = "#555555";
     canv.context.fillRect(0,2*canv.canvas.height/3,canv.canvas.width,canv.canvas.height/2);
 
     canv.context.strokeStyle = "#333333";
@@ -1060,7 +1060,7 @@ var GamePlayScene = function(game, stage)
     canv.context.lineTo(brx,bry);
     canv.context.stroke();
 
-    canv.context.strokeStyle = "#4E3801";
+    canv.context.strokeStyle = "#111111";
     var lerp = function(s,e,t) { return s+(e-s)*t; }
     var rails = 20;
     for(var i = 0; i < rails; i++)
