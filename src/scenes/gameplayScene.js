@@ -353,6 +353,18 @@ var GamePlayScene = function(game, stage)
       canv.context.strokeStyle = "#000000";
       canv.context.lineWidth = 5;
       canv.context.strokeRect(self.x+self.scenario.shaker.x, self.y+self.scenario.shaker.y-self.bump, self.w, self.h);
+
+      var pointx = self.x+self.w/2+10+self.scenario.shaker.x;
+      var pointy = self.y+self.h-3+self.scenario.shaker.y-self.bump;
+      if(self.monologue.disabled) canv.context.fillStyle = "#BBBBBB";
+      else                        canv.context.fillStyle = "#FFFFFF";
+      canv.context.strokeStyle = "#000000";
+      canv.context.beginPath();
+      canv.context.moveTo(pointx, pointy);
+      canv.context.lineTo(pointx+self.w/20, pointy+self.w/20);
+      canv.context.lineTo(pointx+self.w/20, pointy);
+      canv.context.fill();
+      canv.context.stroke();
     }
   }
 
@@ -392,6 +404,18 @@ var GamePlayScene = function(game, stage)
       canv.context.strokeStyle = "#000000";
       canv.context.lineWidth = 5;
       canv.context.strokeRect(self.x+self.scenario.shaker.x, self.y+self.scenario.shaker.y-self.bump, self.w, self.h);
+
+      var pointx = self.x+self.w/2+10+self.scenario.shaker.x;
+      var pointy = self.y+self.h-3+self.scenario.shaker.y-self.bump;
+      if(self.monologue.disabled) canv.context.fillStyle = "#BBBBBB";
+      else                        canv.context.fillStyle = "#FFFFFF";
+      canv.context.strokeStyle = "#000000";
+      canv.context.beginPath();
+      canv.context.moveTo(pointx, pointy);
+      canv.context.lineTo(pointx+self.w/20, pointy+self.w/20);
+      canv.context.lineTo(pointx+self.w/20, pointy);
+      canv.context.fill();
+      canv.context.stroke();
     }
   }
 
