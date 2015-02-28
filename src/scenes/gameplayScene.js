@@ -522,6 +522,9 @@ var GamePlayScene = function(game, stage)
     self.w = 220;
     self.h = 100;
 
+    self.escaping = false;
+    self.t = 0;
+
     //personal wiggler
     self.s = new Shaker();
 
@@ -540,6 +543,14 @@ var GamePlayScene = function(game, stage)
       canv.context.strokeRect(self.x+self.s.x+self.scenario.shaker.x,self.y+self.s.y+self.scenario.shaker.y,self.w,self.h);
 
       self.scenario.shaker.randomize();
+    }
+
+    self.tick = function()
+    {
+      if(self.escaping)
+      {
+        self.t++;
+      }
     }
   }
 
