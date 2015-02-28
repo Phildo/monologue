@@ -539,8 +539,8 @@ var GamePlayScene = function(game, stage)
 
       self.scenario.shaker.randomize();
 
-      var a = (Math.floor(self.t/5)%14);
-      if(a > 7) a = 14-a;
+      var a = (Math.floor(self.t/5)%12);
+      if(a > 6) a = 12-a;
       canv.context.drawImage(assetter.asset("arm"+(a+1)+".png"),self.x-self.w-10,self.y+self.h/4,self.w*3,self.w*2);
     }
 

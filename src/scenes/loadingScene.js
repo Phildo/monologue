@@ -38,7 +38,6 @@ var LoadingScene = function(game, stage)
     img_srcs.push("assets/arm5.png");
     img_srcs.push("assets/arm6.png");
     img_srcs.push("assets/arm7.png");
-    img_srcs.push("assets/arm8.png");
     for(var i = 0; i < img_srcs.length; i++)
     {
       images[i] = new Image();
