@@ -61,16 +61,20 @@ Feature Creep:
 TODOs:
 
 NEEDS TO BE DONE:
-New Sounds
+	Spellcheck words
+	Does not go back to splash after lose/win
+	Sound For hopping away hero.
+
 
 WOULD LIKE:
-	Spellcheck words
 	Generate more words
 	Generate more structures
 
 	Background Animation (tumbleweed/cloud)
-	Legit 8bit/low poly art.
+	Legit 8bit/low/algorithmic(kek) poly art.
 
+	Music start at splash screen.
+	Train sound gets louder depending on how close it is to you...
 
 FEATURE CREEP:
 	Multiplayer

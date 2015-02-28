@@ -893,7 +893,11 @@ var GamePlayScene = function(game, stage)
             self.fade.t = ((self.modetweenhack-20)/(tweenlen-20));
           }
         }
-        else scene.goToScenario(0);
+        else
+        {
+          bg_audio.stop();
+          game.nextScene();
+        }
       }
     }
   }

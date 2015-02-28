@@ -49,7 +49,7 @@ var TextGen = function()
     [
       "Sheriff of Easton",
       "Sheriff of Westwood",
-      "Deputy Riccardo of Amarillo",
+      "Deputy of Amarillo",
       "Vigilante of El Paso"
     ];
 
