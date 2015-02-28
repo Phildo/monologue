@@ -420,10 +420,10 @@ var GamePlayScene = function(game, stage)
 
     self.scenario = scen;
 
-    self.x = 700;
-    self.y = 300;
-    self.w = 100;
-    self.h = 300;
+    self.x = 570;
+    self.y = 220;
+    self.w = 350;
+    self.h = 500;
 
     self.anim = 0;
 
@@ -441,7 +441,12 @@ var GamePlayScene = function(game, stage)
       self.scenario.shaker.randomize();
       self.scenario.shaker.x*=20;
       self.scenario.shaker.y*=20;
-      canv.context.fillRect(self.x+x-(self.scenario.shaker.x/2),self.y-self.anim+y-(self.scenario.shaker.y/2),self.w+self.scenario.shaker.x,self.h+self.anim+self.scenario.shaker.y);
+
+      if(self.anim > 5)
+        canv.context.drawImage(assetter.asset("BadGuy1.png"),self.x+x-(self.scenario.shaker.x/2),self.y-self.anim+y-(self.scenario.shaker.y/2),self.w+self.scenario.shaker.x,self.h+self.anim+self.scenario.shaker.y);
+      else
+        canv.context.drawImage(assetter.asset("BadGuy2.png"),self.x+x-(self.scenario.shaker.x/2),self.y-self.anim+y-(self.scenario.shaker.y/2),self.w+self.scenario.shaker.x,self.h+self.anim+self.scenario.shaker.y);
+
       self.scenario.shaker.randomize();
     }
 
@@ -457,10 +462,10 @@ var GamePlayScene = function(game, stage)
 
     self.scenario = scen;
 
-    self.x = 220;
+    self.x = 120;
     self.y = 500;
-    self.w = 200;
-    self.h = 80;
+    self.w = 400;
+    self.h = 160;
 
     //personal wiggler
     self.s = new Shaker();
@@ -474,25 +479,7 @@ var GamePlayScene = function(game, stage)
       self.s.shake = self.s.x;
       self.s.randomize();
 
-      self.s.randomize();
-      self.scenario.shaker.randomize();
-      canv.context.fillStyle = "#FFFFFF";
-      var x = self.scenario.shaker.x;
-      var y = self.scenario.shaker.y;
-      self.scenario.shaker.randomize();
-      self.scenario.shaker.x*=20;
-      self.scenario.shaker.y*=20;
-      canv.context.fillRect(self.x+x-(self.scenario.shaker.x/2)+self.s.x,self.y+y-(self.scenario.shaker.y/2)+self.s.y,self.w+self.scenario.shaker.x,self.h+self.scenario.shaker.y);
-
-      self.s.randomize();
-      self.scenario.shaker.randomize();
-      canv.context.strokeStyle = "#000000";
-      var x = self.scenario.shaker.x;
-      var y = self.scenario.shaker.y;
-      self.scenario.shaker.randomize();
-      self.scenario.shaker.x*=20;
-      self.scenario.shaker.y*=20;
-      canv.context.strokeRect(self.x+x-(self.scenario.shaker.x/2)+self.s.x,self.y+y-(self.scenario.shaker.y/2)+self.s.y,self.w+self.scenario.shaker.x,self.h+self.scenario.shaker.y);
+      canv.context.drawImage(assetter.asset("Hero.png"),self.x+self.s.x+self.scenario.shaker.x,self.y+self.s.y+self.scenario.shaker.y,self.w,self.h);
 
       self.scenario.shaker.randomize();
     }
