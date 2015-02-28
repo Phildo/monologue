@@ -20,6 +20,7 @@ var GamePlayScene = function(game, stage)
   var cough_audio;
   var train_audio;
   var boing_audio;
+  var scream_audio;
 
   var Monologue = function(scen, str)
   {
@@ -809,13 +810,15 @@ var GamePlayScene = function(game, stage)
       else if(self.mode == 2)
       {
         var tweenlen = 50;
-        if(self.modetweenhack < tweenlen)
+        if(self.modetweenhack < tweenlen+120)
         {
           self.modetweenhack++;
           if(self.modetweenhack > 30)
           {
             self.fade.t = ((self.modetweenhack-30)/(tweenlen-30));
           }
+          if(self.modetweenhack == tweenlen)
+            scream_audio.play();
         }
         else scene.goToScenario(2);
       }
@@ -1042,6 +1045,8 @@ var GamePlayScene = function(game, stage)
     train_audio.load();
     boing_audio = new Aud("assets/Jawharp1.ogg",false);
     boing_audio.load();
+    scream_audio = new Aud("assets/Jawharp1.ogg",false);
+    scream_audio.load();
 
     scenarios = [];
     var main = new Scenario1();
