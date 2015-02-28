@@ -487,6 +487,7 @@ var GamePlayScene = function(game, stage)
     self.h = 300;
 
     self.anim = 0;
+    self.t = 0;
 
     self.talk = function()
     {
@@ -537,11 +538,16 @@ var GamePlayScene = function(game, stage)
       canv.context.stroke();
 
       self.scenario.shaker.randomize();
+
+      var a = (Math.floor(self.t/5)%14);
+      if(a > 7) a = 14-a;
+      canv.context.drawImage(assetter.asset("arm"+(a+1)+".png"),self.x-self.w-10,self.y+self.h/4,self.w*3,self.w*2);
     }
 
     self.tick = function()
     {
       if(self.anim > 0) self.anim--;
+      self.t++;
     }
   }
 

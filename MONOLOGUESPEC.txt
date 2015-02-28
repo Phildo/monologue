@@ -62,23 +62,14 @@ TODOs:
 
 NEEDS TO BE DONE:
 
-	Need Scream Sound
-
-	Text Flying in on Top
-	Villain Arms Flailing
-
-	Tumbleweed Animation
-
-
-	Quick trainsition after failure gameplay and failure
-	Pure White Splash to offwhite
-
-	flashy timer halfway
-	tophat
+	Flashy timer halfway
+	Tophat
 
 WOULD LIKE:
+	Tumbleweed Animation
+	Villain Arms Flailing
 	Generate more words
-	Something else on hero besides just white?
+	Something else on hero besides just white? -> star
 	Train sound gets louder depending on how close it is to you...
 
 FEATURE CREEP:
@@ -91,36 +82,3 @@ FEATURE CREEP:
 
 NITPICK:
 	Music Loop "fix"
-
-
-
-
-monologue object gets ticked in gpscene
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

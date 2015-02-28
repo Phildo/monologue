@@ -441,7 +441,7 @@ var TextGen = function()
       "Eldorado Canyon",
       "Gold Point",
       "Cimarron",
-      "Elizabethtown",
+      "Elizabeth Town",
       "Fort Sumner",
       "Los Cerrillos",
       "Santa Fe",
@@ -459,19 +459,6 @@ var TextGen = function()
       city[Math.floor(Math.random() * city.length)]
       );
   }
-
-
-
-    // var WW_NAME_VILLAIN = //Can create a creator for these names as well...
-    // [
-    //   "William Todd Marsh",
-    //   "Todd Marsh Williams",
-    //   "James T. Rustle",
-    //   "Joseph James Cunningham",
-    //   "Richard D. James", //lelenny
-    // ];
-
-
 
   var villain_name_gen = function()
   {
@@ -503,7 +490,9 @@ var TextGen = function()
       "Mary",
       "Adriel",
       "Butch",
-      "Cassidy"
+      "Cassidy",
+      "Michelle",
+      "Elizabeth"
     ];
 
     var middle = //could be first - first with random prob.
@@ -536,7 +525,8 @@ var TextGen = function()
       "Adams",
       "Lincoln",
       "Roosevelt",
-      "Monroe"
+      "Monroe",
+      "Summers"
     ];
 
 
