@@ -61,27 +61,29 @@ Feature Creep:
 TODOs:
 
 NEEDS TO BE DONE:
-	Generate more words
 
 	Need Scream Sound
 
-	Straps on Hero
-		Straps being cut off over time
-
 	Text Flying in on Top
-	Tumbleweed Animation
 	Villain Arms Flailing
 
-	Idle gameplay kicks to splash
+	Tumbleweed Animation
 
+
+	Quick trainsition after failure gameplay and failure
+	Pure White Splash to offwhite
+
+	flashy timer halfway
+	tophat
 
 WOULD LIKE:
-	Generate more structures
-	Music start at splash screen?
+	Generate more words
+	Something else on hero besides just white?
 	Train sound gets louder depending on how close it is to you...
 
 FEATURE CREEP:
 	Multiplayer
+	Generate more structures
 	Generate more levels
 		Pirate
 	Audio loop while waiting for text to start...........
@@ -93,7 +95,7 @@ NITPICK:
 
 
 
-
+monologue object gets ticked in gpscene
 
 
 

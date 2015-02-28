@@ -30,6 +30,7 @@ var GamePlayScene = function(game, stage)
     self.text = str;
     self.progress = 0;
     self.disabled = 0;
+    self.idleTicks = 0;
 
     self.splitTextIntoLines = function(font, width)
     {
@@ -75,6 +76,7 @@ var GamePlayScene = function(game, stage)
 
     self.key = function(k)
     {
+      self.idleTicks = 0;
       if(self.disabled)
       {
         self.scenario.bubb.bumpit();
@@ -103,6 +105,7 @@ var GamePlayScene = function(game, stage)
     self.tick = function()
     {
       if(self.disabled > 0) self.disabled--;
+      self.idleTicks++;
     }
   }
 
@@ -844,6 +847,12 @@ var GamePlayScene = function(game, stage)
     // 2 = victory
     self.tick = function()
     {
+      if(self.mono.idleTicks >= 2400)//1200)
+      {
+        bg_audio.stop();
+        game.nextScene();
+      }
+
       if(self.mode == 0)
       {
         if(self.timer.t == self.timer.total)
@@ -867,6 +876,7 @@ var GamePlayScene = function(game, stage)
         {
           self.modetweenhack++;
           self.hero.escaping = true;
+          self.fade.t = ((self.modetweenhack-30)/(tweenlen-30));
         }
         else
         {
@@ -884,7 +894,7 @@ var GamePlayScene = function(game, stage)
             self.fade.t = ((self.modetweenhack-30)/(tweenlen-30));
           }
           if(self.modetweenhack == tweenlen)
-            scream_audio.play();
+            scream_audio[Math.floor(Math.random()*scream_audio.length)].play();
         }
         else scene.goToScenario(2);
       }
@@ -1123,8 +1133,12 @@ var GamePlayScene = function(game, stage)
       boing_audio.push(new Aud("assets/Jawharp"+(i+1)+".ogg",false));
       boing_audio[i].load();
     }
-    scream_audio = new Aud("assets/Jawharp1.ogg",false);
-    scream_audio.load();
+    scream_audio = [];
+    for(var i = 0; i < 3; i++)
+    {
+      scream_audio.push(new Aud("assets/Scream"+(i+1)+".ogg",false));
+      scream_audio[i].load();
+    }
 
     scenarios = [];
     var main = new Scenario1();
