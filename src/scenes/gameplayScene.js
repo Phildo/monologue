@@ -513,6 +513,24 @@ var GamePlayScene = function(game, stage)
     }
   }
 
+  var Strap = function(x,y,w,h)
+  {
+    var self = this;
+
+    self.sx = x+Math.random()*w;
+    self.sy = y;
+    self.ex = x+Math.random()*w;
+    self.ey = y+h;
+    self.draw = function(canv,offx,offy)
+    {
+      canv.context.strokeStyle = "#222222";
+      canv.context.lineWidth = 5;
+      canv.context.beginPath();
+      canv.context.moveTo(self.sx+offx,self.sy+offy);
+      canv.context.lineTo(self.ex+offx,self.ey+offy);
+      canv.context.stroke();
+    }
+  }
   var Hero = function(scen)
   {
     var self = this;
@@ -534,14 +552,18 @@ var GamePlayScene = function(game, stage)
 
     //personal wiggler
     self.s = new Shaker();
+    self.samt = 0;;
+
+    self.straps = [];
+    self.maxstraps = 30;
+    self.nstraps = self.maxstraps;
+    self.lastknownnstraps = self.nstraps;
+    for(var i = 0; i < self.nstraps; i++)
+      self.straps.push(new Strap(self.x,self.y,self.w,self.h));
 
     self.draw = function(canv)
     {
-      self.s.shake = 5;
-      self.s.randomize();
-      self.s.shake = self.s.x;
-      self.s.randomize();
-      self.s.shake = self.s.x;
+      self.s.shake = 5*(1+self.samt);
       self.s.randomize();
 
       canv.context.fillStyle = "#FFFFFF";
@@ -549,14 +571,27 @@ var GamePlayScene = function(game, stage)
       canv.context.fillRect(self.x+self.s.x+self.scenario.shaker.x,self.y+self.s.y+self.scenario.shaker.y,self.w,self.h);
       canv.context.strokeRect(self.x+self.s.x+self.scenario.shaker.x,self.y+self.s.y+self.scenario.shaker.y,self.w,self.h);
 
+      for(var i = 0; i < self.nstraps; i++)
+        self.straps[i].draw(canv, self.s.x+self.scenario.shaker.x, self.s.y+self.scenario.shaker.y);
+
       self.scenario.shaker.randomize();
     }
 
     self.tick = function()
     {
+      if(self.samt > 0) self.samt--;
+      self.nstraps = Math.round((1-(self.scenario.timer.t/self.scenario.timer.total))*self.maxstraps);
+      if(self.nstraps != self.lastknownnstraps)
+      {
+        console.log('snappin');
+        boing_audio[Math.floor(Math.random()*boing_audio.length)].play();
+        self.samt = 20;
+      }
+      self.lastknownnstraps = self.nstraps;
       if(self.escaping)
       {
-        if(self.t == 0) boing_audio.play();
+        self.nstraps = 0;
+        if(self.t == 0) boing_audio[Math.floor(Math.random()*boing_audio.length)].play();
         self.t++;
         self.y = self.orig_y - Math.abs(Math.sin(self.t/10))*200;
         self.x-=3;
@@ -1047,8 +1082,12 @@ var GamePlayScene = function(game, stage)
     }
     train_audio = new Aud("assets/SteamWhistle.ogg",false);
     train_audio.load();
-    boing_audio = new Aud("assets/Jawharp1.ogg",false);
-    boing_audio.load();
+    boing_audio = [];
+    for(var i = 0; i < 5; i++)
+    {
+      boing_audio.push(new Aud("assets/Jawharp"+(i+1)+".ogg",false));
+      boing_audio[i].load();
+    }
     scream_audio = new Aud("assets/Jawharp1.ogg",false);
     scream_audio.load();
 
