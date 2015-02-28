@@ -94,7 +94,7 @@ var GamePlayScene = function(game, stage)
         self.progress++;
       }
       else if((' ' == self.text.substring(self.progress,  self.progress+1).toLowerCase()) &&
-              (k   == self.text.substring(self.progress+1,self.progress+2).toLowerCase()))
+             (k   == self.text.substring(self.progress+1,self.progress+2).toLowerCase()))
       {
         if(self.scenario.timer) self.scenario.timer.start();
         self.scenario.bubb.bumpit();
@@ -617,6 +617,8 @@ var GamePlayScene = function(game, stage)
       canv.context.strokeStyle = "#000000";
       canv.context.fillRect(self.x+self.s.x+self.scenario.shaker.x,self.y+self.s.y+self.scenario.shaker.y,self.w,self.h);
       canv.context.strokeRect(self.x+self.s.x+self.scenario.shaker.x,self.y+self.s.y+self.scenario.shaker.y,self.w,self.h);
+
+      canv.context.drawImage(assetter.asset("star.png"), self.x+20+self.s.x+self.scenario.shaker.x  , self.y+10+self.s.y+self.scenario.shaker.y ,(1/7)*self.w,(1/7)*self.w);
 
       for(var i = 0; i < self.nstraps; i++)
         self.straps[i].draw(canv, self.s.x+self.scenario.shaker.x, self.s.y+self.scenario.shaker.y);

@@ -69,7 +69,6 @@ WOULD LIKE:
 	Tumbleweed Animation
 	Villain Arms Flailing
 	Generate more words
-	Something else on hero besides just white? -> star
 	Train sound gets louder depending on how close it is to you...
 
 FEATURE CREEP:
