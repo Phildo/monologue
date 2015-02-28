@@ -424,8 +424,8 @@ var GamePlayScene = function(game, stage)
 
     self.x = 570;
     self.y = 220;
-    self.w = 350;
-    self.h = 500;
+    self.w = 200;
+    self.h = 400;
 
     self.anim = 0;
 
@@ -437,17 +437,34 @@ var GamePlayScene = function(game, stage)
     self.draw = function(canv)
     {
       self.scenario.shaker.randomize();
-      canv.context.fillStyle = "#000000";
       var x = self.scenario.shaker.x;
       var y = self.scenario.shaker.y;
       self.scenario.shaker.randomize();
       self.scenario.shaker.x*=20;
       self.scenario.shaker.y*=20;
 
-      if(self.anim > 5)
-        canv.context.drawImage(assetter.asset("BadGuy1.png"),self.x+x-(self.scenario.shaker.x/2),self.y-self.anim+y-(self.scenario.shaker.y/2),self.w+self.scenario.shaker.x,self.h+self.anim+self.scenario.shaker.y);
-      else
-        canv.context.drawImage(assetter.asset("BadGuy2.png"),self.x+x-(self.scenario.shaker.x/2),self.y-self.anim+y-(self.scenario.shaker.y/2),self.w+self.scenario.shaker.x,self.h+self.anim+self.scenario.shaker.y);
+      canv.context.fillStyle = "#000000";
+      canv.context.fillRect(self.x+x-(self.scenario.shaker.x/2),self.y-self.anim+y-(self.scenario.shaker.y/2),self.w+self.scenario.shaker.x,self.h+self.anim+self.scenario.shaker.y);
+
+      canv.context.strokeStyle = "#FFFFFF";
+      canv.context.lineWidth = 10;
+      canv.context.beginPath();
+      canv.context.arc(
+        self.x+self.w/4+self.scenario.shaker.x,
+        self.y+self.h/8+self.scenario.shaker.y-self.anim,
+        (self.w/6),
+        0,
+        2*Math.PI,
+        true);
+      canv.context.stroke();
+
+/*
+      canv.context.lineWidth = 8;
+      canv.context.beginPath();
+      canv.context.moveTo(self.x+self.w/2-self.w/10,self.y+self.h/4);
+      canv.context.lineTo();
+      canv.context.stroke();
+*/
 
       self.scenario.shaker.randomize();
     }
@@ -905,7 +922,39 @@ var GamePlayScene = function(game, stage)
 
   self.draw = function()
   {
-    stage.drawCanv.context.drawImage(assetter.asset("bg.png"),0+scenarios[cur_scen].shaker.x,0+scenarios[cur_scen].shaker.y);
+    var canv = stage.drawCanv;
+    canv.context.fillStyle = "#79F5FF";
+    canv.context.fillRect(0,0,canv.canvas.width,canv.canvas.height);
+    canv.context.fillStyle = "#FFF800";
+    canv.context.fillRect(0,canv.canvas.height/2,canv.canvas.width,canv.canvas.height/2);
+
+    canv.context.strokeStyle = "#333333";
+    canv.context.lineWidth = 4;
+    var tlx = 250; var tly = canv.canvas.height/2;
+    var trx = 260; var trY = canv.canvas.height/2;
+    var blx = 150; var bly = canv.canvas.height;
+    var brx = 360; var bry = canv.canvas.height;
+    canv.context.beginPath();
+    canv.context.moveTo(tlx,tly);
+    canv.context.lineTo(blx,bly);
+    canv.context.stroke();
+    canv.context.beginPath();
+    canv.context.moveTo(trx,trY);
+    canv.context.lineTo(brx,bry);
+    canv.context.stroke();
+
+    canv.context.strokeStyle = "#4E3801";
+    var lerp = function(s,e,t) { return s+(e-s)*t; }
+    var rails = 20;
+    for(var i = 0; i < rails; i++)
+    {
+      var t = (i/rails)*(i/rails);
+      canv.context.lineWidth = t*20;
+      canv.context.beginPath();
+      canv.context.moveTo(lerp(tlx,blx,t),lerp(tly,bly,t));
+      canv.context.lineTo(lerp(trx,brx,t),lerp(trY,bry,t));
+      canv.context.stroke();
+    }
     drawer.flush();
   };
 
