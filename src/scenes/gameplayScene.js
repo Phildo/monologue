@@ -93,6 +93,15 @@ var GamePlayScene = function(game, stage)
         self.scenario.villain.talk();
         self.progress++;
       }
+      else if((' ' == self.text.substring(self.progress,  self.progress+1).toLowerCase()) &&
+              (k   == self.text.substring(self.progress+1,self.progress+2).toLowerCase()))
+      {
+        if(self.scenario.timer) self.scenario.timer.start();
+        self.scenario.bubb.bumpit();
+        mermer_audio[Math.floor(Math.random()*mermer_audio.length)].play();
+        self.scenario.villain.talk();
+        self.progress+=2;
+      }
       else
       {
         cough_audio[Math.floor(Math.random()*cough_audio.length)].play();
