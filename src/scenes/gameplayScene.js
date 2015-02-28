@@ -66,7 +66,7 @@ var GamePlayScene = function(game, stage)
     }
     self.revokeProgress = function()
     {
-      self.progress = self.text.substring(0,self.progress).lastIndexOf(" ")+1;
+      self.progress = self.text.substring(0,self.progress+1).lastIndexOf(" ")+1;
     }
 
     self.key = function(k)
