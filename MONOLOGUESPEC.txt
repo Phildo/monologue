@@ -1,4 +1,4 @@
-MONOLOGUE v.8:
+MONOLOGUE v1:
 
 
 Premise:
@@ -61,28 +61,64 @@ Feature Creep:
 TODOs:
 
 NEEDS TO BE DONE:
-	Spellcheck words
-	Does not go back to splash after lose/win
-	Sound For hopping away hero.
+	Generate more words
+
+	Need Scream Sound
+
+	Straps on Hero
+		Straps being cut off over time
+
+	Text Flying in on Top
+	Tumbleweed Animation
+	Villain Arms Flailing
+
+	Idle gameplay kicks to splash
 
 
 WOULD LIKE:
-	Generate more words
 	Generate more structures
-
-	Background Animation (tumbleweed/cloud)
-	Legit 8bit/low/algorithmic(kek) poly art.
-
-	Music start at splash screen.
+	Music start at splash screen?
 	Train sound gets louder depending on how close it is to you...
 
 FEATURE CREEP:
 	Multiplayer
 	Generate more levels
 		Pirate
-	audio loop while waiting for text to start...........
+	Audio loop while waiting for text to start...........
 	Vignetteart style
-
 
 NITPICK:
 	Music Loop "fix"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

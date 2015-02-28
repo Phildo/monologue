@@ -57,7 +57,9 @@ var TextGen = function()
     [
       "bank",
       "general store",
-      "saloon"
+      "saloon",
+      "sarsaparilla factory",
+      "stables"
     ];
 
     var WW_BANDIT_SYNONYM = 
@@ -72,9 +74,9 @@ var TextGen = function()
 
     var WW_ADJ_VILLAIN = //Didn't set up a gneralization system that doesn't suck ass so have to label it this...
     [
-      "rootin-tootin",
+      "rootin tootin",
       "crazy",
-      "irratic",
+      "wild",
       "psychotic",
       "feared"
     ];
@@ -101,7 +103,7 @@ var TextGen = function()
       "benevolent",
       "almighty", 
       "precious",
-      "worshipped"
+      "worshiped"
     ];
 
     var WW_VERB_RANSACK = 
@@ -209,9 +211,7 @@ var TextGen = function()
   self.getMonologue = function()
   {
 
-
     var r = Math.floor(Math.random() * 3) // 3 = Phrases
-
 
     if (r == 0)
     {
@@ -227,9 +227,6 @@ var TextGen = function()
     }
     //return randomshit[Math.floor(Math.random()*randomshit.length)];
    
-    //return getWWP3();
-    //return getWWP2();
-    //return getWWP1();
   }
 
   self.getFailureMonologue = function()
@@ -264,7 +261,7 @@ var TextGen = function()
   var getWWP1 = function()
   {
     //Make a few templates, randomly populate them with context relevant phrases.
-    //"Ahaha! Now that I, the baddest and most rootin-tootin bandito William Todd Marsh, have proudly defeated the almighty Sheriff of Easton, 
+    //"Ahaha! Now that I, the baddest and most rootin tootin bandito William Todd Marsh, have proudly defeated the almighty Sheriff of Easton, 
     //  I will gather my rowdy gang and we will ransack the general goods store and rob your bank for all its worth.";
     //regex of 
     //"WW_EXCLAMATION Now that I, the WW_SUPERLATIVE_ADJ and most WW_ADJ_VILLAIN WW_BANDIT_SYNONYM WW_NAME_villain, have WW_ADVERB_DEFEATED_PAST and WW_VERB_DEFEATED_PAST the WW_ADJ_HERO WW_NAME_HERO,
@@ -278,13 +275,13 @@ var TextGen = function()
       " and most " + 
       rE(WW_ADJ_VILLAIN) + " " +
       rE(WW_BANDIT_SYNONYM) + " " +
-      rE(WW_NAME_VILLAIN) + 
+      villain_name_gen() + //rE(WW_NAME_VILLAIN) + 
       ", have " + 
       rE(WW_ADVERB_DEFEATED_PAST) + " " +
       rE(WW_VERB_DEFEATED_PAST) +
       " the " + 
       rE(WW_ADJ_HERO) + " " +
-      rE(WW_NAME_HERO) +
+      hero_name_gen() + //rE(WW_NAME_HERO) +
       ", I will " + 
       rE(WW_VERB_GATHER) +
       " my " + 
@@ -315,7 +312,7 @@ var TextGen = function()
       " I have " + 
       rE(WW_VERB_BUNDLE_PAST) + 
       " and tied the " + 
-      rE(WW_NAME_HERO) + 
+      hero_name_gen() + //rE(WW_NAME_HERO) + 
       " for all of his good deeds. " + //parse out good
       "Soon he will be " + 
       rE(WW_VERB_CRUSH_PAST) + 
@@ -332,7 +329,7 @@ var TextGen = function()
       //" I have " + 
       rE(WW_BANDIT_SYNONYM) + " " +
       //" I have " + 
-      rE(WW_NAME_VILLAIN) + 
+      villain_name_gen() + //rE(WW_NAME_VILLAIN) + 
       "!"
       );
 
@@ -351,7 +348,7 @@ var TextGen = function()
       rE(WW_LISTEN_UP) + 
       " you " + 
       rE(WW_YELLOW_BELLY) + ", " + 
-      rE(WW_NAME_HERO) + 
+      hero_name_gen() + //rE(WW_NAME_HERO) + 
       "! You've " + 
       rE(WW_ROAM_PAST) + 
       " these " + 
@@ -375,12 +372,185 @@ var TextGen = function()
       " this side of the " + 
       rE(WW_RIVER) + 
       ". The name is " + 
-      rE(WW_NAME_VILLAIN) + 
+      villain_name_gen() + //rE(WW_NAME_VILLAIN) + 
       ". Don't forget it!" 
       );
   }
 
+
+
+
+
+
+
+  var hero_name_gen = function()
+  {
+    var title = //#hackcity
+    [ 
+      "Sheriff",
+      "Sheriff",
+      "Sheriff",
+      "Deputy",
+      "Deputy",
+      "Vigilante"
+    ];
+
+    var city = 
+    [
+      "Westwood",
+      "Deadwood",
+      "Easton",
+      "Amarillo",
+      "El Paso",
+      "Albuquerque",
+      "Reno",
+      "San Juan",//lolPR
+      "Madison", //lelenny
+      "Menasha", //lelenny
+      "Roswell",
+      "Diablo Canyon",
+      "Courtland",
+      "Fairbank",
+      "Fort Bowie",
+      "Gleeson",
+      "Harshaw",
+      "Mineral Park",
+      "Sunnyside",
+      "Tombstone",
+      "Washington Camp",
+      "Fort Smith",
+      "Prairie Grove",
+      "Ballarat",
+      "Calico",
+      "Old Sacramento",
+      "Placerville",
+      "Fort Point",
+      "Fort Alcatraz",
+      "Bent's Fort",
+      "Central City",
+      "Cripple Creek",
+      "Leadville",
+      "Abilene",
+      "Baxter Springs",
+      "Dodge City",
+      "Leavenworth",
+      "Weston",
+      "Bannack",
+      "Old Fort Atkinson",
+      "Rock Creek",
+      "Eldorado Canyon",
+      "Gold Point",
+      "Cimarron",
+      "Elizabethtown",
+      "Fort Sumner",
+      "Los Cerrillos",
+      "Santa Fe",
+      "Fort Union",
+      "Sumpter",
+      "Oakton",
+      "Fort Griffin",
+      "San Antonio",
+      "Fort Laramie"
+    ];
+
+    return (
+      title[Math.floor(Math.random() * title.length)] + 
+      " of " +
+      city[Math.floor(Math.random() * city.length)]
+      );
+  }
+
+
+
+    // var WW_NAME_VILLAIN = //Can create a creator for these names as well...
+    // [
+    //   "William Todd Marsh",
+    //   "Todd Marsh Williams",
+    //   "James T. Rustle",
+    //   "Joseph James Cunningham",
+    //   "Richard D. James", //lelenny
+    // ];
+
+
+
+  var villain_name_gen = function()
+  {
+    var first = 
+    [
+      "William",
+      "Todd",
+      "James",
+      "Joseph",
+      "John",
+      "Richard",
+      "Phil",
+      "Tyler",
+      "Nick",
+      "Clint",
+      "Johnny",
+      "Abigail",
+      "Annie",
+      "Anne",
+      "Abilene",
+      "Eleanor",
+      "Christopher",
+      "Lisa",
+      "Virginia",
+      "Quincy",
+      "Abraham",
+      "Theodore",
+      "Marie",
+      "Mary",
+      "Adriel",
+      "Butch",
+      "Cassidy"
+    ];
+
+    var middle = //could be first - first with random prob.
+    [
+      "William",
+      "Todd",
+      "James",
+      "Joseph",
+      "John",
+      "Cassidy",
+      "A.", "B.", "C.", "D.", "E.", "F.", "G.", "H.", "L.", "M.", "N.", "O.", "P.", "R.", "S.", "T."
+    ];
+
+    var last = 
+    [
+      "Cunningham",
+      "Marston", //lelenny
+      "Rustle",
+      "Williams",
+      "Marsh",
+      "James",
+      "Dougherty",
+      "Heindl",
+      //Tyler's last name...
+      "Cash",
+      "Olson",
+      "Smith",
+      "Jefferson",
+      "Washington",
+      "Adams",
+      "Lincoln",
+      "Roosevelt",
+      "Monroe"
+    ];
+
+
+    return (
+      first[Math.floor(Math.random() * first.length)] + 
+      (Math.round(Math.random()) == 0 ? " " + middle[Math.floor(Math.random() * middle.length)] + " " : " ")
+      + last[Math.floor(Math.random() * last.length)]
+
+
+      )
+  }
+
 }
+
 
 
 //test shite
@@ -393,7 +563,7 @@ var TextGen = function()
 
 
 
-//"Ahaha! Now that I, the baddest and most rootin-tootin bandito William Todd Marsh, have proudly defeated the almighty Sheriff of Easton, 
+//"Ahaha! Now that I, the baddest and most rootin tootin bandito William Todd Marsh, have proudly defeated the almighty Sheriff of Easton, 
 //  I will gather my rowdy gang and we will ransack the general goods store and rob your bank for all its worth.";
 
 
