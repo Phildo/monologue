@@ -568,11 +568,26 @@ var GamePlayScene = function(game, stage)
       x -= ((w*sin)-w)/2;
       w *= sin;
 
-      if(Math.round(self.sin_seed/10)%2)
-        canv.context.drawImage(assetter.asset("Train1.png"),x+self.scenario.shaker.x,y+self.scenario.shaker.y,w,h);
-      else
-        canv.context.drawImage(assetter.asset("Train2.png"),x+self.scenario.shaker.x,y+self.scenario.shaker.y,w,h);
-      //canv.context.fillRect(x,y,w,h);
+      x += (w*(1/3))/2
+      y += (h*(1/3))/2
+      w *= 2/3;
+      h *= 2/3;
+
+      canv.context.fillStyle = "#888888";
+      canv.context.strokeStyle = "#000000";
+      canv.context.fillRect(x,y,w,h);
+      canv.context.strokeRect(x,y,w,h);
+      y+=h/3
+      canv.context.beginPath();
+      canv.context.arc(
+      x+w/2+self.scenario.shaker.x,
+      y+h/2+self.scenario.shaker.y,
+      (w/2)-5,
+      0,
+      2*Math.PI,
+      true);
+      canv.context.fill();
+      canv.context.stroke();
     }
     self.tick = function()
     {
