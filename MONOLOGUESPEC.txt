@@ -1,4 +1,4 @@
-MONOLOGUE v.2:
+MONOLOGUE v.8:
 
 
 Premise:
@@ -61,8 +61,7 @@ Feature Creep:
 TODOs:
 
 NEEDS TO BE DONE:
-	Timer by char count
-	New Sounds
+New Sounds
 
 WOULD LIKE:
 	Spellcheck words
@@ -70,17 +69,15 @@ WOULD LIKE:
 	Generate more structures
 
 	Background Animation (tumbleweed/cloud)
-	Hero Animation
-	Multiplayer
 	Legit 8bit/low poly art.
-	Credits
 
 
 FEATURE CREEP:
+	Multiplayer
 	Generate more levels
 		Pirate
 	audio loop while waiting for text to start...........
-	vignette
+	Vignetteart style
 
 
 NITPICK:

@@ -67,28 +67,33 @@ var StartScene = function(game, stage)
 
 
 
-
-      //play text
-      canv.context.font = "144px vg_font";
-      canv.context.fillStyle = "#999999";
-      canv.context.fillText("play", 154, 615);
-
-      if(toggleTextColor)
+      if(shouldTransition)
       {
-        canv.context.fillStyle = "#FF0000";       
+        canv.context.font = "144px vg_font";
+        canv.context.fillStyle = "#000000";
+        canv.context.fillText("play", 154, 615);
       }
       else
       {
+        //play text
+        canv.context.font = "144px vg_font";
         canv.context.fillStyle = "#999999";
+        canv.context.fillText("play", 154, 615);
+
+        if(toggleTextColor)
+        {
+          canv.context.fillStyle = "#FF0000";       
+        }
+        else
+        {
+          canv.context.fillStyle = "#999999";
+        }
+        canv.context.fillText(progressString.substring(0,progressInt+1), 154, 615);
+
+        canv.context.fillStyle = "#000000";
+        canv.context.fillText(progressString.substring(0,progressInt), 154, 615);
       }
-      canv.context.fillText(progressString.substring(0,progressInt+1), 154, 615);
-
-      canv.context.fillStyle = "#000000";
-      canv.context.fillText(progressString.substring(0,progressInt), 154, 615);
-
     }
-
-
 
 
     //by saying self = this, we can explicitly make sure that self refers to this object
