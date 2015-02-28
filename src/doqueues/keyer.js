@@ -14,17 +14,17 @@ var Keyer = function(init)
   self.register = function(keyable) { keyables.push(keyable); }
   self.unregister = function(keyable) { var i = keyables.indexOf(keyable); if(i != -1) keyables.splice(i,1); }
   self.clear = function() { keyables = []; }
-  function preventFault(evt) { evt.preventDefault(); return false; };
+  function preventFault(evt) { if(evt.keyCode == 8) { evt.preventDefault(); return false; } };
   self.attach = function() //will get auto-called at creation
   {
     document.addEventListener('keypress', key, false);
-    //document.addEventListener('keydown', preventFault, false);
+    document.addEventListener('keydown', preventFault, false);
     document.addEventListener('keyup', preventFault, false);
   }
   self.detach = function()
   {
     document.removeEventListener('keypress', key);
-    //document.removeEventListener('keydown', preventFault);
+    document.removeEventListener('keydown', preventFault);
     document.removeEventListener('keyup', preventFault);
   }
 
