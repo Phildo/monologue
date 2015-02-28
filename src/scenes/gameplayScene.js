@@ -908,8 +908,12 @@ var GamePlayScene = function(game, stage)
         }
         else
         {
-          bg_audio.stop();
-          game.nextScene();
+          //try again
+          scene.goToScenario(0);
+
+          //go to home screen
+          //bg_audio.stop();
+          //game.nextScene();
         }
       }
     }
@@ -973,7 +977,7 @@ var GamePlayScene = function(game, stage)
       bg_audio.stop();
     }
 
-    //0 = lamenting
+    //0 = proudtalk
     //1 = fadeout
     self.tick = function()
     {
