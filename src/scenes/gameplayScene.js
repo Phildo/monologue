@@ -422,10 +422,10 @@ var GamePlayScene = function(game, stage)
 
     self.scenario = scen;
 
-    self.x = 570;
-    self.y = 220;
-    self.w = 200;
-    self.h = 400;
+    self.x = 700;
+    self.y = 250;
+    self.w = 100;
+    self.h = 300;
 
     self.anim = 0;
 
@@ -458,13 +458,24 @@ var GamePlayScene = function(game, stage)
         true);
       canv.context.stroke();
 
-/*
       canv.context.lineWidth = 8;
+      self.scenario.shaker.randomize();
+      self.scenario.shaker.x*=10;
+      self.scenario.shaker.y*=10;
+
       canv.context.beginPath();
-      canv.context.moveTo(self.x+self.w/2-self.w/10,self.y+self.h/4);
-      canv.context.lineTo();
+      canv.context.moveTo(self.x+self.w/2-self.w/10+self.scenario.shaker.x,self.y+self.h/4-self.anim+self.scenario.shaker.y);
+      canv.context.lineTo(self.x-self.w/4+self.scenario.shaker.x,self.y+self.h/3-(self.anim*10)+self.scenario.shaker.y);
       canv.context.stroke();
-*/
+
+      self.scenario.shaker.randomize();
+      self.scenario.shaker.x*=10;
+      self.scenario.shaker.y*=10;
+
+      canv.context.beginPath();
+      canv.context.moveTo(self.x+self.w/2+self.w/10+self.scenario.shaker.x,self.y+self.h/4-self.anim+self.scenario.shaker.y);
+      canv.context.lineTo(self.x+self.w+self.w/4+self.scenario.shaker.x,self.y+self.h/3-(self.anim*10)+self.scenario.shaker.y);
+      canv.context.stroke();
 
       self.scenario.shaker.randomize();
     }
@@ -481,10 +492,10 @@ var GamePlayScene = function(game, stage)
 
     self.scenario = scen;
 
-    self.x = 120;
-    self.y = 500;
-    self.w = 400;
-    self.h = 160;
+    self.x = 150;
+    self.y = 530;
+    self.w = 220;
+    self.h = 100;
 
     //personal wiggler
     self.s = new Shaker();
@@ -498,7 +509,10 @@ var GamePlayScene = function(game, stage)
       self.s.shake = self.s.x;
       self.s.randomize();
 
-      canv.context.drawImage(assetter.asset("Hero.png"),self.x+self.s.x+self.scenario.shaker.x,self.y+self.s.y+self.scenario.shaker.y,self.w,self.h);
+      canv.context.fillStyle = "#FFFFFF";
+      canv.context.strokeStyle = "#000000";
+      canv.context.fillRect(self.x+self.s.x+self.scenario.shaker.x,self.y+self.s.y+self.scenario.shaker.y,self.w,self.h);
+      canv.context.strokeRect(self.x+self.s.x+self.scenario.shaker.x,self.y+self.s.y+self.scenario.shaker.y,self.w,self.h);
 
       self.scenario.shaker.randomize();
     }
@@ -511,31 +525,33 @@ var GamePlayScene = function(game, stage)
     self.scenario = scen;
     self.monologue = mono;
 
-    self.start_x = 350;
-    self.start_y = 410;
+    self.start_x = 250-5;
+    self.start_y = 2*stage.drawCanv.canvas.height/3-20;
     self.start_w = 20;
-    self.start_h = 15;
+    self.start_h = 20;
 
-    self.end_x = 220;
-    self.end_y = 380;
-    self.end_w = 200;
-    self.end_h = 150;
+    self.end_x = 150-105;
+    self.end_y = stage.drawCanv.canvas.height-420;
+    self.end_w = 420;
+    self.end_h = 420;
 
     self.sin_seed = 0;
 
     var lerp = function(s,e,t)
     {
-      return s+(e-s)*t;
+      return s+(e-s)*(t*0.8);
     }
     self.draw = function(canv)
     {
       self.scenario.shaker.randomize();
       canv.context.fillStyle = "#FFFFFF";
 
-      var x = lerp(self.start_x,self.end_x,self.monologue.progress/self.monologue.text.length);
-      var y = lerp(self.start_y,self.end_y,self.monologue.progress/self.monologue.text.length);
-      var w = lerp(self.start_w,self.end_w,self.monologue.progress/self.monologue.text.length);
-      var h = lerp(self.start_h,self.end_h,self.monologue.progress/self.monologue.text.length);
+      var t = self.monologue.progress/self.monologue.text.length;
+      t = t*t;
+      var x = lerp(self.start_x,self.end_x,t);
+      var y = lerp(self.start_y,self.end_y,t);
+      var w = lerp(self.start_w,self.end_w,t);
+      var h = lerp(self.start_h,self.end_h,t);
 
       var sin = Math.sin(self.sin_seed);
 
@@ -602,6 +618,7 @@ var GamePlayScene = function(game, stage)
       self.mono = new Monologue(self,tgen.getMonologue());
       self.mono_full_disp = new MonologueFullDisplay(self,self.mono);
       self.timer = new Timer(self);
+      self.timer.total = Math.round(self.mono.text.length*8.75);
       self.bubb = new BubbleDisplay(self,self.mono,self.timer);
       self.shaker = new Shaker(self);
       self.train = new Train(self,self.mono);
@@ -926,12 +943,12 @@ var GamePlayScene = function(game, stage)
     canv.context.fillStyle = "#79F5FF";
     canv.context.fillRect(0,0,canv.canvas.width,canv.canvas.height);
     canv.context.fillStyle = "#FFF800";
-    canv.context.fillRect(0,canv.canvas.height/2,canv.canvas.width,canv.canvas.height/2);
+    canv.context.fillRect(0,2*canv.canvas.height/3,canv.canvas.width,canv.canvas.height/2);
 
     canv.context.strokeStyle = "#333333";
     canv.context.lineWidth = 4;
-    var tlx = 250; var tly = canv.canvas.height/2;
-    var trx = 260; var trY = canv.canvas.height/2;
+    var tlx = 250; var tly = 2*canv.canvas.height/3;
+    var trx = 260; var trY = 2*canv.canvas.height/3;
     var blx = 150; var bly = canv.canvas.height;
     var brx = 360; var bry = canv.canvas.height;
     canv.context.beginPath();
