@@ -585,6 +585,7 @@ var GamePlayScene = function(game, stage)
       self.mono = new Monologue(self,tgen.getMonologue());
       self.mono_full_disp = new MonologueFullDisplay(self,self.mono);
       self.timer = new Timer(self);
+      self.timer.total = Math.round(self.mono.text.length*8.75);
       self.bubb = new BubbleDisplay(self,self.mono,self.timer);
       self.shaker = new Shaker(self);
       self.train = new Train(self,self.mono);
