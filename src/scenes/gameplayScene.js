@@ -1027,14 +1027,67 @@ var GamePlayScene = function(game, stage)
     cur_scen = 0;
     scenarios[cur_scen].begin();
     ticker.register(scenarios[cur_scen]);
+
+    cloud_particler.clear();
+    for(var i = 0; i < 5; i++)
+      cloud_particler.register(new Cloud(Math.random()*(stage.drawCanv.canvas.width+100),Math.random()*350+50));
   };
 
+  var CloudPuff = function(x,y,s)
+  {
+    var self = this;
+
+    self.x = x;
+    self.y = y;
+    self.s = s;
+  }
+  var Cloud = function(x,y)
+  {
+    var self = this;
+
+    self.x = x;
+    self.y = y;
+    self.puffs = [];
+    self.sp = 0.2+(Math.random()*0.5);
+
+    var npuffs = 5+Math.floor(Math.random()*10);
+    for(var i = 0; i < npuffs; i++)
+      self.puffs.push(new CloudPuff((Math.random()*80)-40,(Math.random()*30)-15,Math.random()*20+10));
+
+    self.draw = function(canv)
+    {
+      for(var i = 0; i < npuffs; i++)
+      {
+        canv.context.fillStyle = "#CCCCCC";
+        canv.context.lineWidth = 5;
+        canv.context.beginPath();
+        canv.context.arc(
+          self.x+self.puffs[i].x,
+          self.y+self.puffs[i].y,
+          self.puffs[i].s,
+          0,
+          Math.PI*2,
+          true);
+        canv.context.fill();
+      }
+    }
+
+    self.tick = function()
+    {
+      self.x -= self.sp;
+      return self.x > -40;
+    }
+  }
+
+  var cloud_particler = new Particler({}); //hack so nothing needs to manage it
   self.tick = function()
   {
     keyer.flush();
     ticker.flush();
+    cloud_particler.tick();
 
     if(Math.floor(Math.random()*1000) == 0) train_audio.play();
+    if(Math.floor(Math.random()*500) == 0) cloud_particler.register(new Cloud(stage.drawCanv.canvas.width+100,Math.random()*350+50));
   };
 
   self.draw = function()
@@ -1042,6 +1095,9 @@ var GamePlayScene = function(game, stage)
     var canv = stage.drawCanv;
     canv.context.fillStyle = "#BBBBBB";
     canv.context.fillRect(0,0,canv.canvas.width,canv.canvas.height);
+
+    cloud_particler.draw(stage.drawCanv); //draw after sky, before ground
+
     canv.context.fillStyle = "#555555";
     canv.context.fillRect(0,2*canv.canvas.height/3,canv.canvas.width,canv.canvas.height/2);
 
@@ -1072,6 +1128,7 @@ var GamePlayScene = function(game, stage)
       canv.context.lineTo(lerp(trx,brx,t),lerp(trY,bry,t));
       canv.context.stroke();
     }
+
     drawer.flush();
   };
 
