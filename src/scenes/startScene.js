@@ -2,14 +2,23 @@ var StartScene = function(game, stage)
 {
   var self = this;
 
+  var toggleTextColor = true;
+  var tickCount = 0;
+
+  var progressString = "play";
+  var progressInt = 0; //this is the progress of the string in terms of index.
+
+  var shouldTransition = false;
+  var basedAlphaTrainsition = 0.0;
+
   var PlayButton = function()
   {
     var self = this;
-    var toggleTextColor = true;
-    var tickCount = 0;
+    // var toggleTextColor = true;
+    // var tickCount = 0;
 
-    var progressString = "play";
-    var progressInt = 0; //this is the progress of the string in terms of index.
+    // var progressString = "play";
+    // var progressInt = 0; //this is the progress of the string in terms of index.
 
     self.draw = function(canv)
     {
@@ -132,6 +141,16 @@ var StartScene = function(game, stage)
 
   self.ready = function()
   {
+
+    toggleTextColor = true;
+    tickCount = 0;
+
+    progressString = "play";
+    progressInt = 0; //this is the progress of the string in terms of index.
+
+    shouldTransition = false;
+    basedAlphaTrainsition = 0.0;
+
     self.keyer = new Keyer({});//Phil being dumb. js_hacks.js
     self.playButton = new PlayButton();
     self.keyer.register(self.playButton);
@@ -141,11 +160,11 @@ var StartScene = function(game, stage)
 
     self.ticker = new Ticker({});
     self.ticker.register(self.playButton);
+
   };
 
 
-  var shouldTransition = false;
-  var basedAlphaTrainsition = 0.0;
+
 
   self.tick = function()
   {

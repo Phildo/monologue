@@ -11,6 +11,7 @@ var GamePlayScene = function(game, stage)
   var assetter;
   var dbugger; //'debugger' is a keyword... (why.)
   var drawer;
+  var particler;
   var ticker;
   var keyer;
   var tgen;
@@ -18,6 +19,8 @@ var GamePlayScene = function(game, stage)
   var mermer_audio;
   var cough_audio;
   var train_audio;
+  var boing_audio;
+  var scream_audio;
 
   var Monologue = function(scen, str)
   {
@@ -27,6 +30,7 @@ var GamePlayScene = function(game, stage)
     self.text = str;
     self.progress = 0;
     self.disabled = 0;
+    self.idleTicks = 0;
 
     self.splitTextIntoLines = function(font, width)
     {
@@ -72,6 +76,7 @@ var GamePlayScene = function(game, stage)
 
     self.key = function(k)
     {
+      self.idleTicks = 0;
       if(self.disabled)
       {
         self.scenario.bubb.bumpit();
@@ -88,6 +93,15 @@ var GamePlayScene = function(game, stage)
         self.scenario.villain.talk();
         self.progress++;
       }
+      else if((' ' == self.text.substring(self.progress,  self.progress+1).toLowerCase()) &&
+             (k   == self.text.substring(self.progress+1,self.progress+2).toLowerCase()))
+      {
+        if(self.scenario.timer) self.scenario.timer.start();
+        self.scenario.bubb.bumpit();
+        mermer_audio[Math.floor(Math.random()*mermer_audio.length)].play();
+        self.scenario.villain.talk();
+        self.progress+=2;
+      }
       else
       {
         cough_audio[Math.floor(Math.random()*cough_audio.length)].play();
@@ -100,9 +114,33 @@ var GamePlayScene = function(game, stage)
     self.tick = function()
     {
       if(self.disabled > 0) self.disabled--;
+      self.idleTicks++;
     }
   }
 
+  var TextFlyPart = function(c,sx,sy)
+  {
+    var self = this;
+
+    self.t = 0;
+    self.s = new Shaker();
+
+    self.draw = function(canv)
+    {
+      var t = (20-self.t)/20;
+      self.s.shake = t*20;
+      self.s.randomize();
+      canv.context.fillStyle = "#000000";//"rgba(0,0,0,"+t+")";
+      canv.context.font=SmallFont;
+      canv.context.fillText(c,sx+self.s.x,sy+self.s.y);
+    }
+
+    self.tick = function()
+    {
+      self.t++;
+      return self.t < 20;
+    }
+  }
   var MonologueFullDisplay = function(scen, mono)
   {
     var self = this;
@@ -115,35 +153,14 @@ var GamePlayScene = function(game, stage)
     self.lines = self.monologue.splitTextIntoLines(SmallFont,stage.drawCanv.canvas.width);
     self.lineCounts = self.monologue.getCountsForLines(self.lines);
 
+    self.lastknownprogress = 0;
+
     self.draw = function(canv)
     {
       self.scenario.shaker.randomize();
       canv.context.font=SmallFont;
 
-      //Red prompt
-      /*
-      if(self.monologue.disabled) canv.context.fillStyle="#AA0000";
-      else                        canv.context.fillStyle="#FF0000";
-      for(var i = 0; i < self.lines.length; i++)
-      {
-        if(self.monologue.progress >= self.lineCounts[i])
-          canv.context.fillText(self.lines[i],self.x+self.scenario.shaker.x,self.y+(SmallFontPx*i)+self.scenario.shaker.y);
-        else
-        {
-          var p;
-          if(i == 0) p = self.monologue.progress;
-          else       p = self.monologue.progress-self.lineCounts[i-1];
-          if(self.lines[i].substring(p,p+1) == " ")
-            canv.context.fillText(self.lines[i].substring(0,p)+"_",self.x+self.scenario.shaker.x,self.y+(SmallFontPx*i)+self.scenario.shaker.y);
-          else
-            canv.context.fillText(self.lines[i].substring(0,p+1),self.x+self.scenario.shaker.x,self.y+(SmallFontPx*i)+self.scenario.shaker.y);
-        }
-      }
-      */
-
-      //Black completed
-      if(self.monologue.disabled) canv.context.fillStyle="#444444";
-      else                        canv.context.fillStyle="#000000";
+      canv.context.fillStyle="#000000";
       for(var i = 0; i < self.lines.length; i++)
       {
         if(self.monologue.progress >= self.lineCounts[i])
@@ -156,6 +173,33 @@ var GamePlayScene = function(game, stage)
             canv.context.fillText(self.lines[i].substring(0,p),self.x+self.scenario.shaker.x,self.y+(SmallFontPx*i)+self.scenario.shaker.y);
         }
       }
+    }
+
+    self.tick = function()
+    {
+      if(self.lastknownprogress != self.monologue.progress)
+      {
+        var i = 0;
+        for(i = 0; i < self.lines.length && self.monologue.progress > self.lineCounts[i]; i++)
+          ;
+
+        var p;
+        if(i == 0) p = self.monologue.progress;
+        else p = self.monologue.progress-self.lineCounts[i-1];
+
+        stage.drawCanv.context.font=SmallFont;
+        var px = stage.drawCanv.context.measureText(self.lines[i].substring(0,p-1)).width+self.x+self.scenario.shaker.x;
+        var py = self.y+(SmallFontPx*i)+self.scenario.shaker.y;
+
+        particler.register(
+          new TextFlyPart(
+            self.monologue.text.substring(self.monologue.progress-1,self.monologue.progress),
+            px,
+            py
+          )
+        );
+      }
+      self.lastknownprogress = self.monologue.progress;
     }
   }
 
@@ -317,7 +361,7 @@ var GamePlayScene = function(game, stage)
   {
     var self = this;
 
-    self.x = 200;
+    self.x = 250;
     self.y = 200;
     self.w = 520;
     self.h = 115;
@@ -352,6 +396,18 @@ var GamePlayScene = function(game, stage)
       canv.context.strokeStyle = "#000000";
       canv.context.lineWidth = 5;
       canv.context.strokeRect(self.x+self.scenario.shaker.x, self.y+self.scenario.shaker.y-self.bump, self.w, self.h);
+
+      var pointx = self.x+self.w/2+10+self.scenario.shaker.x;
+      var pointy = self.y+self.h-3+self.scenario.shaker.y-self.bump;
+      if(self.monologue.disabled) canv.context.fillStyle = "#BBBBBB";
+      else                        canv.context.fillStyle = "#FFFFFF";
+      canv.context.strokeStyle = "#000000";
+      canv.context.beginPath();
+      canv.context.moveTo(pointx, pointy);
+      canv.context.lineTo(pointx+self.w/20, pointy+self.w/20);
+      canv.context.lineTo(pointx+self.w/20, pointy);
+      canv.context.fill();
+      canv.context.stroke();
     }
   }
 
@@ -359,7 +415,7 @@ var GamePlayScene = function(game, stage)
   {
     var self = this;
 
-    self.x = 200;
+    self.x = 250;
     self.y = 200;
     self.w = 520;
     self.h = 115;
@@ -391,6 +447,18 @@ var GamePlayScene = function(game, stage)
       canv.context.strokeStyle = "#000000";
       canv.context.lineWidth = 5;
       canv.context.strokeRect(self.x+self.scenario.shaker.x, self.y+self.scenario.shaker.y-self.bump, self.w, self.h);
+
+      var pointx = self.x+self.w/2+10+self.scenario.shaker.x;
+      var pointy = self.y+self.h-3+self.scenario.shaker.y-self.bump;
+      if(self.monologue.disabled) canv.context.fillStyle = "#BBBBBB";
+      else                        canv.context.fillStyle = "#FFFFFF";
+      canv.context.strokeStyle = "#000000";
+      canv.context.beginPath();
+      canv.context.moveTo(pointx, pointy);
+      canv.context.lineTo(pointx+self.w/20, pointy+self.w/20);
+      canv.context.lineTo(pointx+self.w/20, pointy);
+      canv.context.fill();
+      canv.context.stroke();
     }
   }
 
@@ -422,12 +490,13 @@ var GamePlayScene = function(game, stage)
 
     self.scenario = scen;
 
-    self.x = 570;
-    self.y = 220;
-    self.w = 350;
-    self.h = 500;
+    self.x = 600;
+    self.y = 300;
+    self.w = 100;
+    self.h = 300;
 
     self.anim = 0;
+    self.t = 0;
 
     self.talk = function()
     {
@@ -437,53 +506,177 @@ var GamePlayScene = function(game, stage)
     self.draw = function(canv)
     {
       self.scenario.shaker.randomize();
-      canv.context.fillStyle = "#000000";
       var x = self.scenario.shaker.x;
       var y = self.scenario.shaker.y;
       self.scenario.shaker.randomize();
       self.scenario.shaker.x*=20;
       self.scenario.shaker.y*=20;
 
-      if(self.anim > 5)
-        canv.context.drawImage(assetter.asset("BadGuy1.png"),self.x+x-(self.scenario.shaker.x/2),self.y-self.anim+y-(self.scenario.shaker.y/2),self.w+self.scenario.shaker.x,self.h+self.anim+self.scenario.shaker.y);
-      else
-        canv.context.drawImage(assetter.asset("BadGuy2.png"),self.x+x-(self.scenario.shaker.x/2),self.y-self.anim+y-(self.scenario.shaker.y/2),self.w+self.scenario.shaker.x,self.h+self.anim+self.scenario.shaker.y);
+      canv.context.fillStyle = "#000000";
+      canv.context.fillRect(self.x+x-(self.scenario.shaker.x/2),self.y-self.anim+y-(self.scenario.shaker.y/2),self.w+self.scenario.shaker.x,self.h+self.anim+self.scenario.shaker.y);
+
+      canv.context.strokeStyle = "#FFFFFF";
+      canv.context.lineWidth = 10;
+      canv.context.beginPath();
+      canv.context.arc(
+        self.x+self.w/4+self.scenario.shaker.x,
+        self.y+self.h/8+self.scenario.shaker.y-self.anim,
+        (self.w/6),
+        0,
+        2*Math.PI,
+        true);
+      canv.context.stroke();
+
+      canv.context.lineWidth = 8;
+      self.scenario.shaker.randomize();
+      self.scenario.shaker.x*=10;
+      self.scenario.shaker.y*=10;
+
+      canv.context.beginPath();
+      canv.context.moveTo(self.x+self.w/2-self.w/10+self.scenario.shaker.x,self.y+self.h/4-self.anim+self.scenario.shaker.y);
+      canv.context.lineTo(self.x-self.w/4+self.scenario.shaker.x,self.y+self.h/3-(self.anim*10)+self.scenario.shaker.y);
+      canv.context.stroke();
 
       self.scenario.shaker.randomize();
+      self.scenario.shaker.x*=10;
+      self.scenario.shaker.y*=10;
+
+      canv.context.beginPath();
+      canv.context.moveTo(self.x+self.w/2+self.w/10+self.scenario.shaker.x,self.y+self.h/4-self.anim+self.scenario.shaker.y);
+      canv.context.lineTo(self.x+self.w+self.w/4+self.scenario.shaker.x,self.y+self.h/3-(self.anim*10)+self.scenario.shaker.y);
+      canv.context.stroke();
+
+      self.scenario.shaker.randomize();
+
+      var a = (Math.floor(self.t/5)%12);
+      if(a > 6) a = 12-a;
+      canv.context.drawImage(assetter.asset("arm"+(a+1)+".png"),self.x-self.w-10,self.y+self.h/4,self.w*3,self.w*2);
     }
 
     self.tick = function()
     {
       if(self.anim > 0) self.anim--;
+      self.t++;
     }
   }
 
+  var Strap = function(x,y,w,h)
+  {
+    var self = this;
+
+    self.sx = x+Math.random()*w;
+    self.sy = y;
+    self.ex = x+Math.random()*w;
+    self.ey = y+h;
+    self.draw = function(canv,offx,offy)
+    {
+      canv.context.strokeStyle = "#222222";
+      canv.context.lineWidth = 5;
+      canv.context.beginPath();
+      canv.context.moveTo(self.sx+offx,self.sy+offy);
+      canv.context.lineTo(self.ex+offx,self.ey+offy);
+      canv.context.stroke();
+    }
+  }
   var Hero = function(scen)
   {
     var self = this;
 
     self.scenario = scen;
 
-    self.x = 120;
-    self.y = 500;
-    self.w = 400;
-    self.h = 160;
+    self.x = 150;
+    self.y = 530;
+    self.w = 220;
+    self.h = 100;
+
+    self.orig_x = self.x;
+    self.orig_y = self.y;
+    self.orig_w = self.w;
+    self.orig_h = self.h;
+
+    self.escaping = false;
+    self.t = 0;
 
     //personal wiggler
     self.s = new Shaker();
+    self.samt = 0;;
+
+    self.straps = [];
+    self.maxstraps = 30;
+    self.nstraps = self.maxstraps;
+    self.lastknownnstraps = self.nstraps;
+    for(var i = 0; i < self.nstraps; i++)
+      self.straps.push(new Strap(self.x,self.y,self.w,self.h));
 
     self.draw = function(canv)
     {
-      self.s.shake = 5;
-      self.s.randomize();
-      self.s.shake = self.s.x;
-      self.s.randomize();
-      self.s.shake = self.s.x;
+      self.s.shake = 5*(1+self.samt);
       self.s.randomize();
 
-      canv.context.drawImage(assetter.asset("Hero.png"),self.x+self.s.x+self.scenario.shaker.x,self.y+self.s.y+self.scenario.shaker.y,self.w,self.h);
+      canv.context.fillStyle = "#FFFFFF";
+      canv.context.strokeStyle = "#000000";
+      canv.context.fillRect(self.x+self.s.x+self.scenario.shaker.x,self.y+self.s.y+self.scenario.shaker.y,self.w,self.h);
+      canv.context.strokeRect(self.x+self.s.x+self.scenario.shaker.x,self.y+self.s.y+self.scenario.shaker.y,self.w,self.h);
+
+      canv.context.drawImage(assetter.asset("star.png"), self.x+20+self.s.x+self.scenario.shaker.x  , self.y+10+self.s.y+self.scenario.shaker.y ,(1/7)*self.w,(1/7)*self.w);
+
+      for(var i = 0; i < self.nstraps; i++)
+        self.straps[i].draw(canv, self.s.x+self.scenario.shaker.x, self.s.y+self.scenario.shaker.y);
 
       self.scenario.shaker.randomize();
+    }
+
+    self.tick = function()
+    {
+      if(self.samt > 0) self.samt--;
+      self.nstraps = Math.round((1-(self.scenario.timer.t/self.scenario.timer.total))*self.maxstraps);
+      if(self.nstraps != self.lastknownnstraps)
+      {
+        boing_audio[Math.floor(Math.random()*boing_audio.length)].play();
+        self.samt = 20;
+      }
+      self.lastknownnstraps = self.nstraps;
+      if(self.escaping)
+      {
+        self.nstraps = 0;
+        if(self.t == 0) boing_audio[Math.floor(Math.random()*boing_audio.length)].play();
+        self.t++;
+        self.y = self.orig_y - Math.abs(Math.sin(self.t/10))*200;
+        self.x-=3;
+      }
+    }
+  }
+
+  var SmokePart = function(scen,x,y,s)
+  {
+    var self = this;
+
+    self.scenario = scen;
+    self.x = x;
+    self.y = y;
+    self.s = s;
+    self.t = 0;
+
+    self.draw = function(canv)
+    {
+      canv.context.fillStyle = "rgba(0,0,0,0.5)";
+      canv.context.beginPath();
+      canv.context.arc(
+      self.x+self.s/2+self.scenario.shaker.x,
+      self.y+self.s/2+self.scenario.shaker.y,
+      (self.s/2),
+      0,
+      2*Math.PI,
+      true);
+      canv.context.fill();
+    }
+
+    self.tick = function()
+    {
+      self.t++;
+      self.y -= self.s/5*Math.random();
+      self.x += self.s/5*((Math.random()*2)-1);
+      return self.t < 100;
     }
   }
 
@@ -494,31 +687,33 @@ var GamePlayScene = function(game, stage)
     self.scenario = scen;
     self.monologue = mono;
 
-    self.start_x = 350;
-    self.start_y = 410;
+    self.start_x = 250-5;
+    self.start_y = 2*stage.drawCanv.canvas.height/3-20;
     self.start_w = 20;
-    self.start_h = 15;
+    self.start_h = 20;
 
-    self.end_x = 220;
-    self.end_y = 380;
-    self.end_w = 200;
-    self.end_h = 150;
+    self.end_x = 150-105;
+    self.end_y = stage.drawCanv.canvas.height-420;
+    self.end_w = 420;
+    self.end_h = 420;
 
     self.sin_seed = 0;
 
     var lerp = function(s,e,t)
     {
-      return s+(e-s)*t;
+      return s+(e-s)*(t*0.8);
     }
     self.draw = function(canv)
     {
       self.scenario.shaker.randomize();
       canv.context.fillStyle = "#FFFFFF";
 
-      var x = lerp(self.start_x,self.end_x,self.monologue.progress/self.monologue.text.length);
-      var y = lerp(self.start_y,self.end_y,self.monologue.progress/self.monologue.text.length);
-      var w = lerp(self.start_w,self.end_w,self.monologue.progress/self.monologue.text.length);
-      var h = lerp(self.start_h,self.end_h,self.monologue.progress/self.monologue.text.length);
+      var t = self.monologue.progress/self.monologue.text.length;
+      t = t*t;
+      var x = lerp(self.start_x,self.end_x,t);
+      var y = lerp(self.start_y,self.end_y,t);
+      var w = lerp(self.start_w,self.end_w,t);
+      var h = lerp(self.start_h,self.end_h,t);
 
       var sin = Math.sin(self.sin_seed);
 
@@ -535,14 +730,38 @@ var GamePlayScene = function(game, stage)
       x -= ((w*sin)-w)/2;
       w *= sin;
 
-      if(Math.round(self.sin_seed/10)%2)
-        canv.context.drawImage(assetter.asset("Train1.png"),x+self.scenario.shaker.x,y+self.scenario.shaker.y,w,h);
-      else
-        canv.context.drawImage(assetter.asset("Train2.png"),x+self.scenario.shaker.x,y+self.scenario.shaker.y,w,h);
-      //canv.context.fillRect(x,y,w,h);
+      x += (w*(1/3))/2
+      y += (h*(1/3))/2
+      w *= 2/3;
+      h *= 2/3;
+
+      canv.context.fillStyle = "#888888";
+      canv.context.strokeStyle = "#000000";
+      canv.context.fillRect(x,y,w,h);
+      canv.context.strokeRect(x,y,w,h);
+      y+=h/3
+      canv.context.beginPath();
+      canv.context.arc(
+      x+w/2+self.scenario.shaker.x,
+      y+h/2+self.scenario.shaker.y,
+      (w/2)-5,
+      0,
+      2*Math.PI,
+      true);
+      canv.context.fill();
+      canv.context.stroke();
     }
     self.tick = function()
     {
+      if(Math.floor(Math.random()*5) == 0)
+      {
+        var t = self.monologue.progress/self.monologue.text.length;
+        t = t*t;
+        var x = lerp(self.start_x,self.end_x,t);
+        var y = lerp(self.start_y,self.end_y,t);
+        var w = lerp(self.start_w,self.end_w,t);
+        particler.register(new SmokePart(self.scenario,x+w/4,y,5+t*50));
+      }
       self.sin_seed+=0.2;
     }
   }
@@ -598,6 +817,7 @@ var GamePlayScene = function(game, stage)
       keyer.register(self.mono);
       ticker.register(self.mono);
       drawer.register(self.mono_full_disp);
+      ticker.register(self.mono_full_disp);
       drawer.register(self.bubb);
       ticker.register(self.bubb);
       ticker.register(self.timer);
@@ -606,7 +826,10 @@ var GamePlayScene = function(game, stage)
       drawer.register(self.train);
       ticker.register(self.train);
       ticker.register(self.villain);
+      drawer.register(particler);
+      ticker.register(particler);
       drawer.register(self.hero);
+      ticker.register(self.hero);
       drawer.register(self.fade);
 
       bg_audio.play();
@@ -617,6 +840,7 @@ var GamePlayScene = function(game, stage)
       keyer.unregister(self.mono);
       ticker.unregister(self.mono);
       drawer.unregister(self.mono_full_disp);
+      ticker.unregister(self.mono_full_disp);
       drawer.unregister(self.bubb);
       ticker.unregister(self.bubb);
       ticker.unregister(self.timer);
@@ -626,6 +850,10 @@ var GamePlayScene = function(game, stage)
       drawer.unregister(self.villain);
       ticker.unregister(self.villain);
       drawer.unregister(self.hero);
+      ticker.unregister(self.hero);
+      drawer.unregister(particler);
+      ticker.unregister(particler);
+      particler.clear();
       drawer.unregister(self.fade);
 
       bg_audio.stop();
@@ -636,6 +864,12 @@ var GamePlayScene = function(game, stage)
     // 2 = victory
     self.tick = function()
     {
+      if(self.mono.idleTicks >= 2400)//1200)
+      {
+        bg_audio.stop();
+        game.nextScene();
+      }
+
       if(self.mode == 0)
       {
         if(self.timer.t == self.timer.total)
@@ -648,17 +882,18 @@ var GamePlayScene = function(game, stage)
         else if(self.mono.progress == self.mono.text.length)
         {
           keyer.unregister(self.mono);
+          ticker.unregister(self.hero);
           self.mode = 2;
         }
       }
       else if(self.mode == 1)
       {
-        var tweenlen = 110;
+        var tweenlen = 150;
         if(self.modetweenhack < tweenlen)
         {
           self.modetweenhack++;
-          self.hero.y -= 20;
-          self.hero.x -= 4;
+          self.hero.escaping = true;
+          self.fade.t = ((self.modetweenhack-30)/(tweenlen-30));
         }
         else
         {
@@ -668,13 +903,15 @@ var GamePlayScene = function(game, stage)
       else if(self.mode == 2)
       {
         var tweenlen = 50;
-        if(self.modetweenhack < tweenlen)
+        if(self.modetweenhack < tweenlen+120)
         {
           self.modetweenhack++;
           if(self.modetweenhack > 30)
           {
             self.fade.t = ((self.modetweenhack-30)/(tweenlen-30));
           }
+          if(self.modetweenhack == tweenlen)
+            scream_audio[Math.floor(Math.random()*scream_audio.length)].play();
         }
         else scene.goToScenario(2);
       }
@@ -709,11 +946,14 @@ var GamePlayScene = function(game, stage)
       keyer.register(self.mono);
       ticker.register(self.mono);
       drawer.register(self.mono_full_disp);
+      ticker.register(self.mono_full_disp);
       drawer.register(self.bubb);
       ticker.register(self.bubb);
       ticker.register(self.shaker);
       drawer.register(self.villain);
       ticker.register(self.villain);
+      drawer.register(particler);
+      ticker.register(particler);
       drawer.register(self.fade);
 
       bg_audio.play();
@@ -724,11 +964,15 @@ var GamePlayScene = function(game, stage)
       keyer.unregister(self.mono);
       ticker.unregister(self.mono);
       drawer.unregister(self.mono_full_disp);
+      ticker.unregister(self.mono_full_disp);
       drawer.unregister(self.bubb);
       ticker.unregister(self.bubb);
       ticker.unregister(self.shaker);
       drawer.unregister(self.villain);
       ticker.unregister(self.villain);
+      drawer.unregister(particler);
+      ticker.unregister(particler);
+      particler.clear();
       drawer.unregister(self.fade);
 
       bg_audio.stop();
@@ -757,7 +1001,15 @@ var GamePlayScene = function(game, stage)
             self.fade.t = ((self.modetweenhack-20)/(tweenlen-20));
           }
         }
-        else scene.goToScenario(0);
+        else
+        {
+          //try again
+          scene.goToScenario(0);
+
+          //go to home screen
+          //bg_audio.stop();
+          //game.nextScene();
+        }
       }
     }
   }
@@ -790,11 +1042,14 @@ var GamePlayScene = function(game, stage)
       keyer.register(self.mono);
       ticker.register(self.mono);
       drawer.register(self.mono_full_disp);
+      ticker.register(self.mono_full_disp);
       drawer.register(self.bubb);
       ticker.register(self.bubb);
       ticker.register(self.shaker);
       drawer.register(self.villain);
       ticker.register(self.villain);
+      drawer.register(particler);
+      ticker.register(particler);
       drawer.register(self.fade);
 
       bg_audio.play();
@@ -805,17 +1060,21 @@ var GamePlayScene = function(game, stage)
       keyer.unregister(self.mono);
       ticker.unregister(self.mono);
       drawer.unregister(self.mono_full_disp);
+      ticker.unregister(self.mono_full_disp);
       drawer.unregister(self.bubb);
       ticker.unregister(self.bubb);
       ticker.unregister(self.shaker);
       drawer.unregister(self.villain);
       ticker.unregister(self.villain);
+      drawer.unregister(particler);
+      ticker.unregister(particler);
+      particler.clear();
       drawer.unregister(self.fade);
 
       bg_audio.stop();
     }
 
-    //0 = lamenting
+    //0 = proudtalk
     //1 = fadeout
     self.tick = function()
     {
@@ -864,8 +1123,11 @@ var GamePlayScene = function(game, stage)
     dbugger = new Debugger({source:document.getElementById("debug_div")});
     ticker = new Ticker({});
     drawer = new Drawer({source:stage.drawCanv});
+    particler = new Particler({});
     keyer = new Keyer({source:stage.dispCanv.canvas});
+
     tgen = new TextGen();
+
     bg_audio = new Aud("assets/AllTiedUp.ogg", true);
     bg_audio.load();
     mermer_audio = [];
@@ -882,6 +1144,18 @@ var GamePlayScene = function(game, stage)
     }
     train_audio = new Aud("assets/SteamWhistle.ogg",false);
     train_audio.load();
+    boing_audio = [];
+    for(var i = 0; i < 5; i++)
+    {
+      boing_audio.push(new Aud("assets/Jawharp"+(i+1)+".ogg",false));
+      boing_audio[i].load();
+    }
+    scream_audio = [];
+    for(var i = 0; i < 3; i++)
+    {
+      scream_audio.push(new Aud("assets/Scream"+(i+1)+".ogg",false));
+      scream_audio[i].load();
+    }
 
     scenarios = [];
     var main = new Scenario1();
@@ -894,19 +1168,108 @@ var GamePlayScene = function(game, stage)
     cur_scen = 0;
     scenarios[cur_scen].begin();
     ticker.register(scenarios[cur_scen]);
+
+    cloud_particler.clear();
+    for(var i = 0; i < 5; i++)
+      cloud_particler.register(new Cloud(Math.random()*(stage.drawCanv.canvas.width+100),Math.random()*350+50));
   };
 
+  var CloudPuff = function(x,y,s)
+  {
+    var self = this;
+
+    self.x = x;
+    self.y = y;
+    self.s = s;
+  }
+  var Cloud = function(x,y)
+  {
+    var self = this;
+
+    self.x = x;
+    self.y = y;
+    self.puffs = [];
+    self.sp = 0.2+(Math.random()*0.5);
+
+    var npuffs = 5+Math.floor(Math.random()*10);
+    for(var i = 0; i < npuffs; i++)
+      self.puffs.push(new CloudPuff((Math.random()*80)-40,(Math.random()*30)-15,Math.random()*20+10));
+
+    self.draw = function(canv)
+    {
+      for(var i = 0; i < npuffs; i++)
+      {
+        canv.context.fillStyle = "#CCCCCC";
+        canv.context.lineWidth = 5;
+        canv.context.beginPath();
+        canv.context.arc(
+          self.x+self.puffs[i].x,
+          self.y+self.puffs[i].y,
+          self.puffs[i].s,
+          0,
+          Math.PI*2,
+          true);
+        canv.context.fill();
+      }
+    }
+
+    self.tick = function()
+    {
+      self.x -= self.sp;
+      return self.x > -40;
+    }
+  }
+
+  var cloud_particler = new Particler({}); //hack so nothing needs to manage it
   self.tick = function()
   {
     keyer.flush();
     ticker.flush();
+    cloud_particler.tick();
 
     if(Math.floor(Math.random()*1000) == 0) train_audio.play();
+    if(Math.floor(Math.random()*500) == 0) cloud_particler.register(new Cloud(stage.drawCanv.canvas.width+100,Math.random()*350+50));
   };
 
   self.draw = function()
   {
-    stage.drawCanv.context.drawImage(assetter.asset("bg.png"),0+scenarios[cur_scen].shaker.x,0+scenarios[cur_scen].shaker.y);
+    var canv = stage.drawCanv;
+    canv.context.fillStyle = "#BBBBBB";
+    canv.context.fillRect(0,0,canv.canvas.width,canv.canvas.height);
+
+    cloud_particler.draw(stage.drawCanv); //draw after sky, before ground
+
+    canv.context.fillStyle = "#555555";
+    canv.context.fillRect(0,2*canv.canvas.height/3,canv.canvas.width,canv.canvas.height/2);
+
+    canv.context.strokeStyle = "#333333";
+    canv.context.lineWidth = 4;
+    var tlx = 250; var tly = 2*canv.canvas.height/3;
+    var trx = 260; var trY = 2*canv.canvas.height/3;
+    var blx = 150; var bly = canv.canvas.height;
+    var brx = 360; var bry = canv.canvas.height;
+    canv.context.beginPath();
+    canv.context.moveTo(tlx,tly);
+    canv.context.lineTo(blx,bly);
+    canv.context.stroke();
+    canv.context.beginPath();
+    canv.context.moveTo(trx,trY);
+    canv.context.lineTo(brx,bry);
+    canv.context.stroke();
+
+    canv.context.strokeStyle = "#111111";
+    var lerp = function(s,e,t) { return s+(e-s)*t; }
+    var rails = 20;
+    for(var i = 0; i < rails; i++)
+    {
+      var t = (i/rails)*(i/rails);
+      canv.context.lineWidth = t*20;
+      canv.context.beginPath();
+      canv.context.moveTo(lerp(tlx,blx,t),lerp(tly,bly,t));
+      canv.context.lineTo(lerp(trx,brx,t),lerp(trY,bry,t));
+      canv.context.stroke();
+    }
+
     drawer.flush();
   };
 

@@ -1,4 +1,4 @@
-MONOLOGUE v.8:
+MONOLOGUE v1:
 
 
 Premise:
@@ -61,24 +61,23 @@ Feature Creep:
 TODOs:
 
 NEEDS TO BE DONE:
-New Sounds
+
+	Flashy timer halfway
+	Tophat
 
 WOULD LIKE:
-	Spellcheck words
+	Tumbleweed Animation
+	Villain Arms Flailing
 	Generate more words
-	Generate more structures
-
-	Background Animation (tumbleweed/cloud)
-	Legit 8bit/low poly art.
-
+	Train sound gets louder depending on how close it is to you...
 
 FEATURE CREEP:
 	Multiplayer
+	Generate more structures
 	Generate more levels
 		Pirate
-	audio loop while waiting for text to start...........
+	Audio loop while waiting for text to start...........
 	Vignetteart style
-
 
 NITPICK:
 	Music Loop "fix"
