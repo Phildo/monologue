@@ -313,8 +313,8 @@ var TextGen = function()
       rE(WW_VERB_BUNDLE_PAST) + 
       " and tied the " + 
       hero_name_gen() + //rE(WW_NAME_HERO) + 
-      " for all of his good deeds. " + //parse out good
-      "Soon he will be " + 
+      " for all of their good deeds. " + //parse out good
+      "Soon they will be " + 
       rE(WW_VERB_CRUSH_PAST) + 
       " and turned into " + 
       rE(WW_ADJ_LITTLE) + " " +
